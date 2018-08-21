@@ -40,4 +40,4 @@ while [[ ${1} != '--' ]]; do
 done
 shift  # drop "--"
 
-exec "${top_srcdir}"/conftools/test-driver "${test_driver_args[@]}" "${top_builddir}"/run.sh "$@"
+exec /bin/bash "${EXPAT_SRCDIR}"/conftools/test-driver "${test_driver_args[@]}" "${EXPAT_BUILDDIR}"/run.sh "$@"
