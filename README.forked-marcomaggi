@@ -1,0 +1,36 @@
+-*- coding: utf-8-unix -*-
+
+		      Libexpat fork by Marco Maggi
+		      ============================
+
+
+Expat is a C library for parsing  XML.  We can find the original project
+repository at:
+
+		<https://github.com/libexpat/libexpat/>
+
+  This README file describes the fork of the project at
+
+	       <https://github.com/marcomaggi/libexpat/>
+
+  It is not a  hostile fork.  The main branch in  the fork repository is
+the one called "forked.marcomaggi-" followed by a date in year-month-day
+format.  All the other branches have names with the format:
+
+	     [description].marcomaggi-[year]-[month]-[day]
+
+  Main purposes of the fork:
+
+* Provide  a test  bed for  developments in  the building  and packaging
+  infrastructure.  For example: single "Makefile.am".
+
+* Provide documentation in GNU Texinfo format.
+
+
+### end of file
+# Local Variables:
+# mode: text
+# fill-column: 72
+# paragraph-start: "*"
+# ispell-local-dictionary: "en_GB"
+# End:
