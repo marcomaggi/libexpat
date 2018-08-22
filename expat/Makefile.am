@@ -28,6 +28,9 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
 # USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#page
+#### global variables
+
 AUTOMAKE_OPTIONS = \
     dist-bzip2 \
     foreign \
@@ -91,57 +94,6 @@ EXTRA_DIST = \
     Changes \
     README.md \
     test-driver-wrapper.sh
-
-
-.PHONY: buildlib
-buildlib:
-	@echo 'ERROR: Running "make buildlib LIBRARY=libexpatw.la"' >&2
-	@echo 'ERROR: is no longer supported.  INSTEAD please:' >&2
-	@echo 'ERROR:' >&2
-	@echo 'ERROR:  * Mass-patch Makefile.am, e.g.' >&2
-	@echo 'ERROR:    # find -name Makefile.am -exec sed \\' >&2
-	@echo 'ERROR:          -e "s,libexpat\.la,libexpatw.la," \\' >&2
-	@echo 'ERROR:          -e "s,libexpat_la,libexpatw_la," \\' >&2
-	@echo 'ERROR:          -i {} +' >&2
-	@echo 'ERROR:' >&2
-	@echo 'ERROR:  * Run automake to re-generate Makefile.in files' >&2
-	@echo 'ERROR:' >&2
-	@echo 'ERROR:  * Use "./configure --without-xmlwf" and/or' >&2
-	@echo 'ERROR:    "make -C lib all install" to bypass compilation' >&2
-	@echo 'ERROR:    of xmlwf (e.g. with -DXML_UNICODE)' >&2
-	@echo 'ERROR:' >&2
-	@false
-
-
-.PHONY: run-benchmark
-run-benchmark:
-	$(MAKE) -C tests/benchmark
-	$(builddir)/run.sh tests/benchmark/benchmark@EXEEXT@ -n $(top_srcdir)/../testdata/largefiles/recset.xml 65535 3
-
-tests/xmlts.zip:
-	if test "$(XMLTS_ZIP)" = ""; then \
-		wget --output-document=tests/xmlts.zip \
-			https://www.w3.org/XML/Test/xmlts20080827.zip; \
-	else \
-		cp $(XMLTS_ZIP) tests/xmlts.zip; \
-	fi
-
-tests/xmlconf: tests/xmlts.zip
-	cd tests && unzip -q xmlts.zip
-
-.PHONY: run-xmltest
-run-xmltest: tests/xmlconf
-if WITH_XMLWF
-	$(MAKE) xmlwf/xmlwf
-	export EXPAT_ABS_SRCDIR=$(abs_srcdir); export EXPAT_ABS_BUILDDIR=$(abs_builddir); \
-	$(srcdir)/tests/xmltest.sh "$(PWD)/run.sh $(PWD)/xmlwf/xmlwf@EXEEXT@" 2>&1 | tee $(builddir)/tests/xmltest.log
-	dos2unix $(builddir)/tests/xmltest.log
-	diff -u $(srcdir)/tests/xmltest.log.expected $(builddir)/tests/xmltest.log
-else
-	@echo 'ERROR: xmlwf is needed for "make run-xmltest".' >&2
-	@echo 'ERROR: Please re-configure without --without-xmlwf.' >&2
-	@false
-endif
 
 .PHONY: qa
 qa:
@@ -234,6 +186,25 @@ EXTRA_DIST += \
     lib/xmltok_impl.h \
     lib/xmltok_ns.c
 
+.PHONY: buildlib
+buildlib:
+	@echo 'ERROR: Running "make buildlib LIBRARY=libexpatw.la"' >&2
+	@echo 'ERROR: is no longer supported.  INSTEAD please:' >&2
+	@echo 'ERROR:' >&2
+	@echo 'ERROR:  * Mass-patch Makefile.am, e.g.' >&2
+	@echo 'ERROR:    # find -name Makefile.am -exec sed \\' >&2
+	@echo 'ERROR:          -e "s,libexpat\.la,libexpatw.la," \\' >&2
+	@echo 'ERROR:          -e "s,libexpat_la,libexpatw_la," \\' >&2
+	@echo 'ERROR:          -i {} +' >&2
+	@echo 'ERROR:' >&2
+	@echo 'ERROR:  * Run automake to re-generate Makefile.in files' >&2
+	@echo 'ERROR:' >&2
+	@echo 'ERROR:  * Use "./configure --without-xmlwf" and/or' >&2
+	@echo 'ERROR:    "make -C lib all install" to bypass compilation' >&2
+	@echo 'ERROR:    of xmlwf (e.g. with -DXML_UNICODE)' >&2
+	@echo 'ERROR:' >&2
+	@false
+
 #page
 #### building xmlwf
 
@@ -317,6 +288,31 @@ EXTRA_DIST += \
     tests/xmltest.log.expected \
     tests/xmltest.sh
 
+tests/xmlts.zip:
+	if test "$(XMLTS_ZIP)" = ""; then \
+		wget --output-document=tests/xmlts.zip \
+			https://www.w3.org/XML/Test/xmlts20080827.zip; \
+	else \
+		cp $(XMLTS_ZIP) tests/xmlts.zip; \
+	fi
+
+tests/xmlconf: tests/xmlts.zip
+	cd tests && unzip -q xmlts.zip
+
+.PHONY: run-xmltest
+run-xmltest: tests/xmlconf
+if WITH_XMLWF
+	$(MAKE) xmlwf/xmlwf
+	export EXPAT_ABS_SRCDIR=$(abs_srcdir); export EXPAT_ABS_BUILDDIR=$(abs_builddir); \
+	$(srcdir)/tests/xmltest.sh "$(PWD)/run.sh $(PWD)/xmlwf/xmlwf@EXEEXT@" 2>&1 | tee $(builddir)/tests/xmltest.log
+	dos2unix $(builddir)/tests/xmltest.log
+	diff -u $(srcdir)/tests/xmltest.log.expected $(builddir)/tests/xmltest.log
+else
+	@echo 'ERROR: xmlwf is needed for "make run-xmltest".' >&2
+	@echo 'ERROR: Please re-configure without --without-xmlwf.' >&2
+	@false
+endif
+
 #page
 #### benchmarking
 
@@ -328,6 +324,10 @@ tests_benchmark_benchmark_LDADD = libexpat.la
 
 EXTRA_DIST += \
     tests/benchmark/README.txt
+
+.PHONY: run-benchmark
+run-benchmark:
+	$(builddir)/run.sh tests/benchmark/benchmark@EXEEXT@ -n $(top_srcdir)/../testdata/largefiles/recset.xml 65535 3
 
 
 ### end of file
