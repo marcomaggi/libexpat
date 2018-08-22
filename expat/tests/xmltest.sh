@@ -41,8 +41,8 @@ declare -r OUTDIR="${EXPAT_ABS_BUILDDIR}/out"
 # declare  OUTDIR=/home/tmp/xml-testsuite-out
 
 # Unicode-aware diff utility
-declare -r DIFF=diff
-#declare -r DIFF="${EXPAT_ABS_SRCDIR}/tests/udiffer.py"
+#declare -r DIFF=diff
+declare -r DIFF="${EXPAT_ABS_SRCDIR}/tests/udiffer.py"
 
 declare  OUTFILE="${OUTDIR}/outfile"
 
