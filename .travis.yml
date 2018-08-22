@@ -9,8 +9,24 @@ dist: trusty
 # https://github.com/travis-ci/travis-ci/issues/9033
 sudo: required
 
+# We do no git operations, so set the "git clone" depth to the minimum.
+#
+git:
+  depth: 1
+
+# These branches are the interesting ones at the forked repository:
+#
+#   <https://github.com/marcomaggi/libexpat/>
+#
+branches:
+  only:
+    - forked.marcomaggi-2018-08-20
+    - run-xmltest-review.marcomaggi-2018-08-21
+    - single-makefile.marcomaggi-2018-08-20
+
 env:
   global:
+    - MAKEFLAGS="-j 2"
     - CFLAGS='-g -pipe'
   matrix:
     - MODE=address
