@@ -107,10 +107,6 @@ qa:
 
 dist_man_MANS = doc/xmlwf.1
 
-doc/$(am__dirstamp):
-	@$(MKDIR_P) doc
-	@: > doc/$(am__dirstamp)
-
 doc/xmlwf.1: doc/xmlwf.xml doc/$(am__dirstamp)
 if WITH_DOCBOOK
 	-rm -f $@
@@ -135,6 +131,13 @@ EXTRA_DIST += \
     doc/style.css \
     doc/valid-xhtml10.png \
     doc/xmlwf.xml
+
+## --------------------------------------------------------------------
+
+AM_MAKEINFOFLAGS	= --no-split
+
+info_TEXINFOS		= doc/expat.texi
+doc_expat_TEXINFOS	= doc/macros.texi
 
 #page
 #### library

@@ -8,3 +8,5 @@ ltconfig
 ltmain.sh
 missing
 test-driver
+mdate-sh
+texinfo.tex
