@@ -34,7 +34,7 @@ PS4='# '
 set -x
 
 cd expat
-./buildconf.sh
+./autogen.sh
 
 if [[ ${MODE} = distcheck ]]; then
     ./configure
