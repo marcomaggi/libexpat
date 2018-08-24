@@ -9,6 +9,9 @@ dist: trusty
 # https://github.com/travis-ci/travis-ci/issues/9033
 sudo: required
 
+notifications:
+  email: false
+
 # We do no git operations, so set the "git clone" depth to the minimum.
 #
 git:
