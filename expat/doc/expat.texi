@@ -14,15 +14,19 @@
 
 @set TITLE                      Expat
 
-@c To be used as @value{PACKAGE} whenever we need to include the full
-@c name of this package.
+@c To be used as @value{PACKAGE} whenever we need to include the full name of
+@c this package.
 @set PACKAGE                    Expat
 
-@c To be used as @value{PACKAGE} whenever we need to include the
-@c nickname of the project: the name that is used to compose the
-@c distribution tarball or the web address.
+@c To be used as @value{PACKAGE} whenever we need to include the nickname of the
+@c project: the name that is used to compose the distribution tarball or the web
+@c address.
 @set PACKAGE_NICKNAME           expat
 
+@c ------------------------------------------------------------------------
+
+@set EXPAT_HOME_PAGE_URL        @url{http://www.libexpat.org/}
+@set EXPAT_MAIN_REPOSITORY_URL  @url{https://github.com/libexpat/libexpat/}
 
 @c page
 @c ------------------------------------------------------------
@@ -30,22 +34,21 @@
 @c ------------------------------------------------------------
 
 @copying
-This document describes version @version{} of @value{PACKAGE}, a C language library for parsing
-@axml{} documents.  It is the underlying @axml{} parser for the open source Mozilla project, Perl's
-@samp{XML::Parser}, Python's @samp{xml.parsers.expat}, and other open--source @axml{} parsers.
+This document describes version @version{} of @value{PACKAGE}, a C language library
+for parsing @axml{} documents.
 
 @quotation
-The bulk of this document was originally commissioned as an article by @samp{XML.com}.  They
-graciously allowed Clark Cooper to retain copyright and to distribute it with Expat.  This version
-has been substantially extended to include documentation on features which have been added since the
-original article was published, and additional information on using the original interface.
+The bulk of this document was originally commissioned as an article by @url{XML.com}.
+They graciously allowed Clark Cooper to retain copyright and to distribute it with
+Expat.  This version has been substantially extended to include documentation on
+features which have been added since the original article was published, and
+additional information on using the original interface.
 @end quotation
 
 @noindent
-Copyright @copyright{} 1998, 1999, 2000 Thai Open Source Software Center Ltd and Clark Cooper.
-
-@noindent
-Copyright @copyright{} 2001-2018 Expat maintainers.
+Copyright @copyright{} 2001-2018 Expat maintainers.@*
+Copyright @copyright{} 1998, 1999, 2000 Thai Open Source Software Center Ltd and
+Clark Cooper.
 
 See the appendix ``Package License'' for the licence notice.
 @end copying
@@ -58,7 +61,6 @@ See the appendix ``Package License'' for the licence notice.
 @titlepage
 @title @value{TITLE}
 @subtitle Revision @version{}
-@c @author @value{AUTHOR} @value{AUTHOR_EMAIL}
 @page
 @vskip 0pt plus 1filll
 @insertcopying
@@ -69,7 +71,7 @@ See the appendix ``Package License'' for the licence notice.
 @ifinfo
 @dircategory Development
 @direntry
-* expat: (expat).               Expat.
+* expat: (expat).               Expat @axml{} parser library for C.
 @end direntry
 @end ifinfo
 
@@ -95,7 +97,7 @@ See the appendix ``Package License'' for the licence notice.
 
 Appendices
 
-* document license::            Document license.
+* package license::             Package license.
 * references::                  Bibliography and references.
 
 Indexes
@@ -112,24 +114,13 @@ Indexes
 @chapter Overview
 
 
-This document describes version @version{} of @value{PACKAGE}, a C language library for parsing
-@axml{} documents.  It is the underlying @axml{} parser for the open source Mozilla project, Perl's
-@samp{XML::Parser}, Python's @samp{xml.parsers.expat}, and other open--source @axml{} parsers.
-
-This library is the creation of James Clark, who's also given us @code{groff} (an @code{nroff}
-look--alike), Jade (an implemention of @acronym{ISO}'s @acronym{DSSSL} stylesheet language for
-@acronym{SGML}), @acronym{XP} (a Java @axml{} parser package), @acronym{XT} (a Java @acronym{XSL}
-engine).  James was also the technical lead on the @axml{} Working Group at @acronym{W3C} that
-produced the @axml{} specification.
-
-This is free software, licensed under the MIT/X Consortium license; we
-can download it from the Expat home page.
-
-@center @url{http://expat.sourceforge.net/}
+This document describes version @version{} of @value{PACKAGE}, a C language library
+for parsing @axml{} documents.
 
 @menu
 * overview intro::              The Expat @axml{} parser.
-* overview install::            Building and installing Expat.
+* overview config::             Configuring the package using the
+                                preprocessor.
 @end menu
 
 @c page
@@ -137,16 +128,15 @@ can download it from the Expat home page.
 @section The Expat @axml{} parser
 
 
-Expat is a stream--oriented parser: We register callback or handler
-functions and then start feeding the parser with the document; as the
-parser recognizes parts of the document, it calls the appropriate
-handler.  The document is processed in pieces, so we can start parsing
-before loading the whole document; this also allows us to parse really
-huge documents that will not fit in memory.
+Expat is a stream--oriented parser: We register callback or handler functions and
+then start feeding the parser with the document; as the parser recognizes parts of
+the document, it calls the appropriate handler.  The document is processed in pieces,
+so we can start parsing before loading the whole document; this also allows us to
+parse really huge documents that will not fit in memory.
 
-Expat can be intimidating due to the many kinds of handlers and options
-we can set.  But we only need to learn four functions in order to do
-90% of what we'll want to do with it:
+Expat can be intimidating due to the many kinds of handlers and options we can set.
+But we only need to learn four functions in order to do 90% of what we'll want to do
+with it:
 
 @table @asis
 @item @cfunc{XML_ParserCreate}
@@ -162,43 +152,15 @@ Set handler for text.
 Feed a buffer holding the document to the parser.
 @end table
 
-Let's look at a very simple example program that only uses three of the
-above functions since it does not need a character handler.  The program
-prints an element outline, indenting child elements to distinguish them
-from the parent elements.
+Let's look at a very simple example program that only uses three of the above
+functions since it does not need a character handler.  The program prints an element
+outline, indenting child elements to distinguish them from the parent elements.
 
 @smallexample
-/***********************************************************
- * outline.c
- *
- * Copyright 1999, Clark Cooper
- * All rights reserved.
- *
- * This program is free software; you can redistribute it
- * and/or modify it under the terms of the license contained
- * in the COPYING file that comes with the expat distribution.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY
- * KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
- * WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
- * PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE AUTHORS
- * OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
- * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
- * OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH
- * THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
- * Read an XML document from standard input and print an
- * element outline on standard output.  Must be used with
- * Expat compiled for UTF-8 output.
- */
-
-
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <expat.h>
-
-#if defined(__amigaos__) && defined(__USE_INLINE__)
-#  include <proto/expat.h>
-#endif
 
 #ifdef XML_LARGE_SIZE
 #  if defined(XML_USE_MSC_EXTENSIONS) && _MSC_VER < 1400
@@ -210,16 +172,25 @@ from the parent elements.
 #  define XML_FMT_INT_MOD "l"
 #endif
 
-#define BUFFSIZE        8192
+static char const * document = "\
+<!-- this is a test document -->\
+<stuff>\
+  <thing>\
+    <alpha>one</alpha>\
+    <beta>two</beta>\
+  </thing>\
+  <thing>\
+    <alpha>123</alpha>\
+    <beta>456</beta>\
+  </thing>\
+</stuff>";
 
-char Buff[BUFFSIZE];
-
-int Depth;
+int depth;
 
 static void XMLCALL
-start (void *data, const char *element, const char **attribute)
+start (void * data, char const * element, char const ** attribute)
 @{
-  for (int i = 0; i < Depth; i++)
+  for (int i = 0; i < depth; i++)
     printf("  ");
 
   printf("%s", element);
@@ -228,89 +199,72 @@ start (void *data, const char *element, const char **attribute)
     printf(" %s='%s'", attribute[i], attribute[i + 1]);
 
   printf("\n");
-  Depth++;
+  depth++;
 @}
 
 static void XMLCALL
-end (void *data, const char *el)
+end (void * data, char const * el)
 @{
-  Depth--;
+  depth--;
 @}
 
 int
-main (int argc, char *argv[])
+main (void)
 @{
-  XML_Parser p = XML_ParserCreate(NULL);
-  if (! p)
-    @{
-      fprintf(stderr, "Couldn't allocate memory for parser\n");
-      exit(-1);
+  XML_Parser    parser;
+
+  parser = XML_ParserCreate(NULL);
+  if (! parser) @{
+    fprintf(stderr, "Couldn't allocate memory for parser\n");
+    exit(EXIT_FAILURE);
+  @}
+  @{
+    char const *        docptr = document;
+    int                 doclen = strlen(docptr);
+
+    XML_SetElementHandler(parser, start, end);
+
+    if (XML_Parse(parser, docptr, doclen, 1) == XML_STATUS_ERROR) @{
+      fprintf(stderr,
+              "Parse error at line %" XML_FMT_INT_MOD "u:\n%s\n",
+              XML_GetCurrentLineNumber(parser),
+              XML_ErrorString(XML_GetErrorCode(parser)));
+      exit(EXIT_FAILURE);
     @}
-
-  XML_SetElementHandler(p, start, end);
-
-  for (;;)
-    @{
-      int done;
-      int len;
-
-      len = (int)fread(Buff, 1, BUFFSIZE, stdin);
-      if (ferror(stdin))
-        @{
-          fprintf(stderr, "Read error\n");
-          exit(-1);
-        @}
-    done = feof(stdin);
-
-    if (XML_Parse(p, Buff, len, done) == XML_STATUS_ERROR)
-      @{
-        fprintf(stderr,
-                "Parse error at line %" XML_FMT_INT_MOD "u:\n%s\n",
-                XML_GetCurrentLineNumber(p),
-                XML_ErrorString(XML_GetErrorCode(p)));
-        exit(-1);
-      @}
-
-      if (done)
-        break;
-    @}
-  XML_ParserFree(p);
-  return 0;
+  @}
+  XML_ParserFree(parser);
+  exit(EXIT_SUCCESS);
 @}
 @end smallexample
 
-After creating the parser, the program just has the job of shoveling the
-document to the parser so that it can do its work.
+After creating the parser, the program just has the job of shoveling the document to
+the parser so that it can do its work.
 
 @itemize
 @item
-The @cfunc{start} handler does all the work: It prints two indenting
-spaces for every level of ancestor elements, then it prints the element
-and attribute information; finally it increments the global @samp{Depth}
-variable.
+The @cfunc{start} handler does all the work: It prints two indenting spaces for every
+level of ancestor elements, then it prints the element and attribute information;
+finally it increments the global @samp{depth} variable.
 
 @item
 The @cfunc{end} handler simply does the bookkeeping work of decrementing
-@samp{Depth}.
+@samp{depth}.
 @end itemize
 
-Note the @samp{XMLCALL} annotation used for the callbacks.  This is used
-to ensure that the Expat and the callbacks are using the same calling
-convention in case the compiler options used for Expat itself and the
-client code are different.  Expat tries not to care what the default
-calling convention is, though it may require that it be compiled with a
-default convention of @samp{cdecl} on some platforms.  For code which
-uses Expat, however, the calling convention is specified by the
-@samp{XMLCALL} annotation on most platforms; callbacks should be defined
-using this annotation.
+Note the @samp{XMLCALL} annotation used for the callbacks.  This is used to ensure
+that Expat and the callbacks are using the same calling convention in case the
+compiler options used for Expat itself and the client code are different.  Expat
+tries not to care what the default calling convention is, though it may require that
+it be compiled with a default convention of @samp{cdecl} on some platforms.  For code
+which uses Expat, however, the calling convention is specified by the @samp{XMLCALL}
+annotation on most platforms; callbacks should be defined using this annotation.
 
-The @samp{XMLCALL} annotation was added in Expat 1.95.7, but existing
-working Expat applications don't need to add it (since they are already
-using the @samp{cdecl} calling convention, or they would not be
-working).  The annotation is only needed if the default calling
-convention may be something other than @samp{cdecl}.  To use the
-annotation safely with older versions of Expat, we can conditionally
-define it after including Expat's header file:
+The @samp{XMLCALL} annotation was added in Expat 1.95.7, but existing working Expat
+applications don't need to add it (since they are already using the @samp{cdecl}
+calling convention, or they would not be working).  The annotation is only needed if
+the default calling convention may be something other than @samp{cdecl}.  To use the
+annotation safely with older versions of Expat, we can conditionally define it after
+including Expat's header file:
 
 @example
 #include <expat.h>
@@ -328,108 +282,56 @@ define it after including Expat's header file:
 @end example
 
 @c page
-@node overview install
-@section Building and installing Expat
+@node overview config
+@section Configuring the package using the preprocessor
 
 
-The Expat distribution comes as a compressed tar file; we may download
-the latest version from Source Forge.  After unpacking it, change the
-current directory to the top of the source tree, then follow either the
-Win32 directions or Unix directions below.
-
-@subsubheading Building under Win32
-
-If we're using the @gnu{} compiler under Cygwin, follow the Unix
-directions in the next section.  Otherwise if we have Microsoft's
-Developer Studio installed, then from Windows Explorer double--click on
-@file{expat.dsp} in the @file{lib} directory and build and install in
-the usual manner.
-
-Alternatively, we may download the Win32 binary package that contains
-the @file{expat.h} include file and a pre--built @acronym{DLL}.
-
-@subsubheading Building under Unix (or @gnu{})
-
-First we'll need to run the @command{configure} shell script in order to
-configure the Makefiles and headers for our system.
-
-If we're happy with all the defaults that configure picks for us, and
-we have permission on our system to install into @file{/usr/local},
-we can install Expat with this sequence of commands:
-
-@example
-$ ./configure
-$ make
-$ make install
-@end example
-
-There are some options that we can provide to this script, but the only
-one we'll mention here is the @option{--prefix} option.  We can find
-out all the options available by running configure with just the
-@option{--help} option.
-
-By default, the @command{configure} script sets things up so that the
-library gets installed in @file{/usr/local/lib} and the associated
-header file in @file{/usr/local/include}.  But if we were to give the
-option @code{--prefix=/home/me/mystuff}, then the library and header
-would get installed in @file{/home/me/mystuff/lib} and
-@file{/home/me/mystuff/include} respectively.
-
-@subsubheading Configuring Expat Using the Pre--Processor
-
-Expat's feature set can be configured using a small number of
-pre-processor definitions. The definition of this symbols does not
-affect the set of entry points for Expat, only the behavior of the
-@api{} and the definition of character types in the case of
-@code{XML_UNICODE_WCHAR_T}.  The symbols are:
+Expat's feature set can be configured using a small number of preprocessor
+definitions.  The definition of this symbols does not affect the set of entry points
+for Expat, only the behavior of the @api{} and the definition of character types in
+the case of @code{XML_UNICODE_WCHAR_T}.  The symbols are:
 
 @table @code
 @item XML_DTD
-Include support for using and reporting @dtd{}--based content.  If this
-is defined, default attribute values from an external @dtd{} subset are
-reported and attribute value normalization occurs based on the type of
-attributes defined in the external subset.  Without this, Expat has a
-smaller memory footprint and can be faster, but will not load external
-entities or process conditional sections.  This does not affect the set
-of functions available in the @api{}.
+Include support for using and reporting @dtd{}--based content.  If this is defined,
+default attribute values from an external @dtd{} subset are reported and attribute
+value normalization occurs based on the type of attributes defined in the external
+subset.  Without this, Expat has a smaller memory footprint and can be faster, but
+will not load external entities or process conditional sections.  This does not
+affect the set of functions available in the @api{}.
 
 @item XML_NS
-When defined, support for the Namespaces in @axml{} specification is
-included.
+When defined, support for the Namespaces in @axml{} specification is included.
 
 @item XML_UNICODE
-When defined, character data reported to the application is encoded in
-@utf{}-16 using wide characters of the type @code{XML_Char}.  This is
-implied if @code{XML_UNICODE_WCHAR_T} is defined.
+When defined, character data reported to the application is encoded in @utf{}-16
+using wide characters of the type @code{XML_Char}.  This is implied if
+@code{XML_UNICODE_WCHAR_T} is defined.
 
 @item XML_UNICODE_WCHAR_T
-If defined, causes the @code{XML_Char} character type to be defined
-using the @code{wchar_t} type; otherwise, @code{unsigned short} is used.
-Defining this implies @code{XML_UNICODE}.
+If defined, causes the @code{XML_Char} character type to be defined using the
+@code{wchar_t} type; otherwise, @code{unsigned short} is used.  Defining this implies
+@code{XML_UNICODE}.
 
 @item XML_LARGE_SIZE
-If defined, causes the @code{XML_Size} and @code{XML_Index} integer
-types to be at least 64 bits in size.  This is intended to support
-processing of very large input streams, where the return values of
-@cfunc{XML_GetCurrentByteIndex}, @cfunc{XML_GetCurrentLineNumber} and
-@cfunc{XML_GetCurrentColumnNumber} could overflow.  It may not be
-supported by all compilers, and is turned off by default.
+If defined, causes the @code{XML_Size} and @code{XML_Index} integer types to be at
+least 64 bits in size.  This is intended to support processing of very large input
+streams, where the return values of @cfunc{XML_GetCurrentByteIndex},
+@cfunc{XML_GetCurrentLineNumber} and @cfunc{XML_GetCurrentColumnNumber} could
+overflow.  It may not be supported by all compilers, and is turned off by default.
 
 @item XML_CONTEXT_BYTES
-The number of input bytes of markup context which the parser will ensure
-are available for reporting via @cfunc{XML_GetInputContext}.  This is
-normally set to 1024, and must be set to a positive interger.  If this
-is not defined, the input context will not be available and
-@cfunc{XML_GetInputContext} will always report @cnull{}.  Without this,
-Expat has a smaller memory footprint and can be faster.
+The number of input bytes of markup context which the parser will ensure are
+available for reporting via @cfunc{XML_GetInputContext}.  This is normally set to
+1024, and must be set to a positive interger.  If this is not defined, the input
+context will not be available and @cfunc{XML_GetInputContext} will always report
+@cnull{}.  Without this, Expat has a smaller memory footprint and can be faster.
 
 @item XML_STATIC
-On Windows, this should be set if Expat is going to be linked statically
-with the code that calls it; this is required to get all the right
-@acronym{MSVC} magic annotations correct.  This is ignored on other
-platforms.
+On Windows, this should be set if Expat is going to be linked statically with the
+code that calls it; this is required to get all the right @acronym{MSVC} magic
+annotations correct.  This is ignored on other platforms.
 @end table
-
 
 @c page
 @node using
@@ -437,7 +339,6 @@ platforms.
 
 
 @menu
-* using compile::               Compiling and linking against Expat.
 * using basics::                Basics.
 * using comm::                  Communicating between handlers.
 * using version::               @axml{} version.
@@ -448,56 +349,6 @@ platforms.
 * using stop::                  Temporarily stopping parsing.
 @end menu
 
-
-@c page
-@node using compile
-@section Compiling and linking against Expat
-
-
-Unless Expat is installed in a location not expected by the compiler and
-linker, all we have to do to use Expat programs is to include the Expat
-header:
-
-@example
-#include <expat.h>
-@end example
-
-@noindent
-in the source files that make calls to it and to tell the linker that it
-needs to link against the Expat library.  On Unix systems, this would
-usually be done with the @option{-lexpat} argument.  Otherwise, we'll
-need to tell the compiler where to look for the Expat header, and to the
-linker where to find the Expat library.  We may also need to take steps
-to tell the operating system where to find this library at run time.
-
-On a Unix--based system, here's what a @file{Makefile} might look like
-when Expat is installed in a standard location:
-
-@example
-CC=cc
-LDFLAGS=
-LIBS= -lexpat
-xmlapp: xmlapp.o
-        $(CC) $(LDFLAGS) -o xmlapp xmlapp.o $(LIBS)
-@end example
-
-If we installed Expat in, say, @file{/home/me/mystuff}, then the
-@file{Makefile} would look like this:
-
-@example
-CC=cc
-CFLAGS= -I/home/me/mystuff/include
-LDFLAGS=
-LIBS= -L/home/me/mystuff/lib -lexpat
-xmlapp: xmlapp.o
-        $(CC) $(LDFLAGS) -o xmlapp xmlapp.o $(LIBS)
-@end example
-
-We'd also have to set the environment variable @env{LD_LIBRARY_PATH} to
-@file{/home/me/mystuff/lib} (or to
-@code{$@{LD_LIBRARY_PATH@}:/home/me/mystuff/lib} if
-@env{LD_LIBRARY_PATH} already has some directories in it) in order to
-run the program.
 
 @c page
 @node using basics
@@ -600,31 +451,26 @@ decrement it last thing in the end handler.
 @section Communicating between handlers
 
 
-In order to be able to pass information between different handlers
-without using globals, we'll need to define a data structure to hold the
-shared variables.  We can then tell Expat (with the
-@cfunc{XML_SetUserData} function) to pass a pointer to this structure to
-the handlers.  This is the first argument received by most handlers.
+In order to be able to pass information between different handlers without using
+globals, we'll need to define a data structure to hold the shared variables.  We can
+then tell Expat (with the function @cfunc{XML_SetUserData}) to pass a pointer to this
+structure to the handlers.  This is the first argument received by most handlers.
 
-In the reference section, an argument to a callback function is named
-@var{userData} and have type @samp{void *} if the user data is passed;
-it will have the type @samp{XML_Parser} if the parser itself is passed.
-When the parser is passed, the user data may be retrieved using
-@cfunc{XML_GetUserData}.
+In this documentation, an argument to a callback function is named @var{userData} and
+have type @samp{void *} if the user data is passed; it will have the type
+@samp{XML_Parser} if the parser itself is passed.  When the parser is passed, the
+user data may be retrieved using @cfunc{XML_GetUserData}.
 
-One common case where multiple calls to a single handler may need to
-communicate using an application data structure, is the case when
-content passed to the character data handler (set by
-@cfunc{XML_SetCharacterDataHandler}) needs to be accumulated.
+One common case where multiple calls to a single handler may need to communicate
+using an application data structure, is when content passed to the character data
+handler (set by @cfunc{XML_SetCharacterDataHandler}) needs to be accumulated.
 
-A common first--time mistake with any of the event--oriented interfaces
-to an @axml{} parser is to expect all the text contained in an element
-to be reported by a single call to the character data handler.  Expat,
-like many other @axml{} parsers, reports such data as a sequence of
-calls; there's no way to know when the end of the sequence is reached
-until a different callback is made.  A buffer referenced by the user
-data structure proves both an effective and convenient place to
-accumulate character data.
+A common first--time mistake with any of the event--oriented interfaces to an @axml{}
+parser is to expect all the text contained in an element to be reported by a single
+call to the character data handler.  Expat, like many other @axml{} parsers, reports
+such data as a sequence of calls; there's no way to know when the end of the sequence
+is reached until a different callback is made.  A buffer referenced by the user data
+structure proves both an effective and convenient place to accumulate character data.
 
 @c page
 @node using version
@@ -1691,9 +1537,9 @@ way it could do this is to set the character handler when a
 @code{<para>} start tag is seen, and unset it for the corresponding end
 tag.
 
-A handler may be unset by providing a @cnull{} pointer to the
-appropriate handler setter.  Most of the handler setting functions have
-no return value, an exception is @func{XML_ExternalEntityRefHandler}.
+A handler may be unset by providing a @cnull{} pointer to the appropriate
+handler setter.  Most of the handler setting functions have no return value, an
+exception is @cfunc{XML_ExternalEntityRefHandler}.
 
 Handlers receive strings in arrays of type @code{XML_Char}; this type is
 conditionally defined in @file{expat.h} as either @code{char},
@@ -3215,43 +3061,54 @@ manner, @uri{} then local name separated by the namespace separator.
 @end deftypefun
 
 @c page
-@node document license
-@appendix Document license
+@node package license
+@appendix Package license
 
 
-Copyright @copyright{} 1998, 1999, 2000 Thai Open Source Software Center
-Ltd and Clark Cooper.
+Copyright @copyright{} 2001-2018 Expat maintainers.@*
+Copyright @copyright{} 1998, 1999, 2000 Thai Open Source Software Center Ltd and
+Clark Cooper.
 
-@noindent
-Copyright @copyright{} 2001, 2002, 2003, 2004, 2005, 2006 Expat
-maintainers.
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the ``Software''), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
 
-Permission is hereby granted, free of charge, to any person obtaining a
-copy of this software and associated documentation files (the
-``Software''), to deal in the Software without restriction, including
-without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to
-permit persons to whom the Software is furnished to do so, subject to
-the following conditions:
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-The above copyright notice and this permission notice shall be included
-in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED ``AS IS'', WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+THE SOFTWARE IS PROVIDED ``AS IS'', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 @c page
 @node references
 @appendix Bibliography and references
 
 
-``Extensible Markup Language (XML) 1.0 (Fifth Edition)''.  W3C
-Recommendation 26 November 2008.
+This library is the creation of James Clark, who's also given us @code{groff}
+(an @code{nroff} look--alike), Jade (an implemention of @acronym{ISO}'s
+@acronym{DSSSL} stylesheet language for @acronym{SGML}), @acronym{XP} (a Java
+@axml{} parser package), @acronym{XT} (a Java @acronym{XSL} engine).  James was
+also the technical lead on the @axml{} Working Group at @acronym{W3C} that
+produced the @axml{} specification.
+
+The home page of Libexpat is at:
+
+@center @value{EXPAT_HOME_PAGE_URL}
+
+@noindent
+development takes place at:
+
+@center @value{EXPAT_MAIN_REPOSITORY_URL}
+
+``Extensible Markup Language (XML) 1.0 (Fifth Edition)''.  W3C Recommendation 26
+November 2008.
 
 @center @url{http://www.w3.org/TR/REC-xml/}
 
@@ -3280,3 +3137,7 @@ Recommendation 26 November 2008.
 @bye
 
 @c end of file
+@c Local Variables:
+@c fill-column: 85
+@c ispell-local-dictionary: "en_US"
+@c End:

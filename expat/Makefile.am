@@ -260,8 +260,13 @@ examples_outline_LDADD = libexpat.la
 AM_TESTS_ENVIRONMENT = export EXPAT_SRCDIR=$(srcdir); export EXPAT_BUILDDIR=$(builddir);
 noinst_LIBRARIES = libruntests.a
 
-check_PROGRAMS = tests/runtests tests/runtestspp
-TESTS = tests/runtests tests/runtestspp
+check_PROGRAMS = \
+	tests/runtests				\
+	tests/runtestspp			\
+	\
+	tests/doc-sample--print-outline
+
+TESTS = $(check_PROGRAMS)
 
 # To support MinGW and Non-MinGW at the same time:
 LOG_DRIVER = $(srcdir)/test-driver-wrapper.sh
@@ -278,8 +283,13 @@ tests_runtests_SOURCES = \
 tests_runtestspp_SOURCES = \
     tests/runtestspp.cpp
 
-tests_runtests_LDADD = libruntests.a libexpat.la
-tests_runtestspp_LDADD = libruntests.a libexpat.la
+expat_tests_ldadd	= libruntests.a libexpat.la
+
+tests_runtests_LDADD			= $(expat_tests_ldadd)
+tests_runtestspp_LDADD			= $(expat_tests_ldadd)
+tests_doc_sample__print_outline_LDADD	= $(expat_tests_ldadd)
+
+## --------------------------------------------------------------------
 
 EXTRA_DIST += \
     tests/chardata.h \
