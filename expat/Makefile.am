@@ -7,6 +7,7 @@
 #                               |_| XML parser
 #
 # Copyright (c) 2017 Expat development team
+# Modified by Marco Maggi <github.com/marcomaggi>
 # Licensed under the MIT license:
 #
 # Permission is  hereby granted,  free of charge,  to any  person obtaining
@@ -188,25 +189,6 @@ EXTRA_DIST += \
     lib/xmltok_impl.c \
     lib/xmltok_impl.h \
     lib/xmltok_ns.c
-
-.PHONY: buildlib
-buildlib:
-	@echo 'ERROR: Running "make buildlib LIBRARY=libexpatw.la"' >&2
-	@echo 'ERROR: is no longer supported.  INSTEAD please:' >&2
-	@echo 'ERROR:' >&2
-	@echo 'ERROR:  * Mass-patch Makefile.am, e.g.' >&2
-	@echo 'ERROR:    # find -name Makefile.am -exec sed \ ' >&2
-	@echo 'ERROR:          -e "s,libexpat\.la,libexpatw.la," \ ' >&2
-	@echo 'ERROR:          -e "s,libexpat_la,libexpatw_la," \ ' >&2
-	@echo 'ERROR:          -i {} +' >&2
-	@echo 'ERROR:' >&2
-	@echo 'ERROR:  * Run automake to re-generate Makefile.in files' >&2
-	@echo 'ERROR:' >&2
-	@echo 'ERROR:  * Use "./configure --without-xmlwf" and/or' >&2
-	@echo 'ERROR:    "make -C lib all install" to bypass compilation' >&2
-	@echo 'ERROR:    of xmlwf (e.g. with -DXML_UNICODE)' >&2
-	@echo 'ERROR:' >&2
-	@false
 
 
 #### building xmlwf
