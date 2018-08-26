@@ -28,7 +28,7 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
 # USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#page
+
 #### global variables
 
 AUTOMAKE_OPTIONS = \
@@ -102,7 +102,7 @@ qa:
 	./qa.sh undefined
 	./qa.sh coverage
 
-#page
+
 #### documentation
 
 dist_man_MANS = doc/xmlwf.1
@@ -139,7 +139,7 @@ AM_MAKEINFOFLAGS	= --no-split
 info_TEXINFOS		= doc/expat.texi
 doc_expat_TEXINFOS	= doc/macros.texi
 
-#page
+
 #### library
 
 include_HEADERS = \
@@ -147,13 +147,13 @@ include_HEADERS = \
     lib/expat.h \
     lib/expat_external.h
 
-lib_LTLIBRARIES = libexpat.la
+lib_LTLIBRARIES = lib/libexpat.la
 
-libexpat_la_LDFLAGS = \
+lib_libexpat_la_LDFLAGS = \
     -no-undefined \
     -version-info @LIBCURRENT@:@LIBREVISION@:@LIBAGE@
 
-libexpat_la_SOURCES = \
+lib_libexpat_la_SOURCES = \
     lib/loadlibrary.c \
     lib/xmlparse.c \
     lib/xmltok.c \
@@ -195,9 +195,9 @@ buildlib:
 	@echo 'ERROR: is no longer supported.  INSTEAD please:' >&2
 	@echo 'ERROR:' >&2
 	@echo 'ERROR:  * Mass-patch Makefile.am, e.g.' >&2
-	@echo 'ERROR:    # find -name Makefile.am -exec sed \\' >&2
-	@echo 'ERROR:          -e "s,libexpat\.la,libexpatw.la," \\' >&2
-	@echo 'ERROR:          -e "s,libexpat_la,libexpatw_la," \\' >&2
+	@echo 'ERROR:    # find -name Makefile.am -exec sed \ ' >&2
+	@echo 'ERROR:          -e "s,libexpat\.la,libexpatw.la," \ ' >&2
+	@echo 'ERROR:          -e "s,libexpat_la,libexpatw_la," \ ' >&2
 	@echo 'ERROR:          -i {} +' >&2
 	@echo 'ERROR:' >&2
 	@echo 'ERROR:  * Run automake to re-generate Makefile.in files' >&2
@@ -208,18 +208,23 @@ buildlib:
 	@echo 'ERROR:' >&2
 	@false
 
-#page
+
 #### building xmlwf
 
 bin_PROGRAMS = xmlwf/xmlwf
 
-xmlwf_xmlwf_LDADD = libexpat.la
+xmlwf_xmlwf_LDADD = lib/libexpat.la
 xmlwf_xmlwf_SOURCES = \
     xmlwf/xmlwf.c \
     xmlwf/xmlfile.c \
     xmlwf/codepage.c \
     xmlwf/@FILEMAP@.c
 
+# We must  define this variable and  duplicate all the flags  added to
+# AM_CPPFLAGS above.   This is because below  we add a flag  to it and
+# defining a  per-executable _CPPFLAGS variable causes  AM_CPPFLAGS to
+# be ignored by GNU Automake.
+#
 xmlwf_xmlwf_CPPFLAGS = -I$(srcdir)/lib
 
 if MINGW
@@ -243,22 +248,22 @@ EXTRA_DIST += \
     xmlwf/xmlurl.h \
     xmlwf/xmlwin32url.cxx
 
-#page
+
 #### examples
 
 noinst_PROGRAMS = examples/elements examples/outline
 
 examples_elements_SOURCES = examples/elements.c
-examples_elements_LDADD = libexpat.la
+examples_elements_LDADD = lib/libexpat.la
 
 examples_outline_SOURCES = examples/outline.c
-examples_outline_LDADD = libexpat.la
+examples_outline_LDADD = lib/libexpat.la
 
-#page
+
 #### tests
 
 AM_TESTS_ENVIRONMENT = export EXPAT_SRCDIR=$(srcdir); export EXPAT_BUILDDIR=$(builddir);
-noinst_LIBRARIES = libruntests.a
+noinst_LIBRARIES = tests/libruntests.a
 
 check_PROGRAMS = \
 	tests/runtests				\
@@ -271,19 +276,17 @@ TESTS = $(check_PROGRAMS)
 # To support MinGW and Non-MinGW at the same time:
 LOG_DRIVER = $(srcdir)/test-driver-wrapper.sh
 
-libruntests_a_SOURCES = \
+tests_libruntests_a_SOURCES = \
     tests/chardata.c \
     tests/structdata.c \
     tests/memcheck.c \
     tests/minicheck.c
 
-tests_runtests_SOURCES = \
-    tests/runtests.c
+tests_runtests_SOURCES			= tests/runtests.c
+tests_runtestspp_SOURCES		= tests/runtestspp.cpp
+tests_doc_sample__print_outline_SOURCES	= tests/doc-sample--print-outline.c
 
-tests_runtestspp_SOURCES = \
-    tests/runtestspp.cpp
-
-expat_tests_ldadd	= libruntests.a libexpat.la
+expat_tests_ldadd	= tests/libruntests.a lib/libexpat.la
 
 tests_runtests_LDADD			= $(expat_tests_ldadd)
 tests_runtestspp_LDADD			= $(expat_tests_ldadd)
@@ -316,7 +319,6 @@ tests/xmlconf: tests/xmlts.zip
 run-xmltest: tests/xmlconf
 if WITH_XMLWF
 	$(MAKE) xmlwf/xmlwf
-	export EXPAT_ABS_SRCDIR=$(abs_srcdir); export EXPAT_ABS_BUILDDIR=$(abs_builddir); \
 	$(srcdir)/tests/xmltest.sh "$(PWD)/run.sh $(PWD)/xmlwf/xmlwf@EXEEXT@" 2>&1 | tee $(builddir)/tests/xmltest.log
 	dos2unix $(builddir)/tests/xmltest.log
 	diff -u $(srcdir)/tests/xmltest.log.expected $(builddir)/tests/xmltest.log
@@ -326,14 +328,14 @@ else
 	@false
 endif
 
-#page
+
 #### benchmarking
 
 noinst_PROGRAMS += tests/benchmark/benchmark
 
 tests_benchmark_benchmark_SOURCES = tests/benchmark/benchmark.c
 
-tests_benchmark_benchmark_LDADD = libexpat.la
+tests_benchmark_benchmark_LDADD = lib/libexpat.la
 
 EXTRA_DIST += \
     tests/benchmark/README.txt
@@ -344,6 +346,3 @@ run-benchmark:
 
 
 ### end of file
-# Local Variables:
-# page-delimiter: "^\#page"
-# End:

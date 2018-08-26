@@ -29,8 +29,6 @@
 # USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 set -e
-top_srcdir="$(dirname "$(type -p "$0")")"
-top_builddir=..
 
 # Suck up all dash-dash test-driver arguments
 test_driver_args=()
