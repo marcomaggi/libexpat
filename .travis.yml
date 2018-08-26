@@ -1,4 +1,5 @@
 # Copyright (C) 2017 Sebastian Pipping <sebastian@pipping.org>
+# Modified by Marco Maggi <github.com/marcomaggi>
 # Licensed under the MIT license
 
 language: cpp
