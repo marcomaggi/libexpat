@@ -292,23 +292,28 @@ EXTRA_DIST += \
 
 tests/xmlts.zip:
 	if test "$(XMLTS_ZIP)" = ""; then \
-		wget --output-document=tests/xmlts.zip \
+		wget --output-document=$(builddir)/tests/xmlts.zip \
 			https://www.w3.org/XML/Test/xmlts20080827.zip; \
 	else \
-		cp $(XMLTS_ZIP) tests/xmlts.zip; \
+		cp $(XMLTS_ZIP) $(builddir)/tests/xmlts.zip; \
 	fi
 
 tests/xmlconf: tests/xmlts.zip
-	cd tests && unzip -q xmlts.zip
+	cd $(builddir)/tests && unzip -q xmlts.zip
 
 .PHONY: run-xmltest
-run-xmltest: tests/xmlconf
 if WITH_XMLWF
-	$(MAKE) xmlwf/xmlwf
-	$(srcdir)/tests/xmltest.sh "$(PWD)/run.sh $(PWD)/xmlwf/xmlwf@EXEEXT@" 2>&1 | tee $(builddir)/tests/xmltest.log
+# Here  we redirect  stderr  to stdout  so  that a  "No  such file  or
+# directory" error message from "xmlwf" is appended to the log file.
+run-xmltest: xmlwf/xmlwf tests/xmlconf
+	export EXPAT_ABS_SRCDIR=$(abs_top_srcdir); \
+	export EXPAT_ABS_BUILDDIR=$(abs_top_builddir); \
+	$(srcdir)/tests/xmltest.sh "$(abs_top_builddir)/run.sh $(abs_top_builddir)/xmlwf/xmlwf@EXEEXT@" 2>&1 | \
+	tee $(builddir)/tests/xmltest.log
 	dos2unix $(builddir)/tests/xmltest.log
 	diff -u $(srcdir)/tests/xmltest.log.expected $(builddir)/tests/xmltest.log
 else
+run-xmltest: tests/xmlconf
 	@echo 'ERROR: xmlwf is needed for "make run-xmltest".' >&2
 	@echo 'ERROR: Please re-configure without --without-xmlwf.' >&2
 	@false
