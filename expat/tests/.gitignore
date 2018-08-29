@@ -8,4 +8,5 @@ runtests
 runtestspp
 xmlts.zip
 XML-Test-Suite
+doc-sample--*
 .libs
