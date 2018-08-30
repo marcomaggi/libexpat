@@ -1,5 +1,5 @@
-[![Travis CI Build Status](https://travis-ci.org/libexpat/libexpat.svg?branch=master)](https://travis-ci.org/libexpat/libexpat)
-[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/libexpat/libexpat?svg=true)](https://ci.appveyor.com/project/libexpat/libexpat)
+[![Travis CI Build Status](https://travis-ci.org/marcomaggi/libexpat.svg?branch=master)](https://travis-ci.org/marcomaggi/libexpat)
+[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/marcomaggi/libexpat?svg=true)](https://ci.appveyor.com/project/marcomaggi/libexpat)
 
 
 # Expat, Release 2.2.6
