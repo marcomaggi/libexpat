@@ -37,7 +37,7 @@ cd expat
 ./autogen.sh
 
 if [[ ${MODE} = distcheck ]]; then
-    ./configure
+    ./configure --enable-maintainer-mode
     make distcheck
 
     mkdir -p ~/rpmbuild/{BUILD,BUILDROOT,RPMS,SOURCES,SPECS,SRPMS}

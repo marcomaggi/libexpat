@@ -86,7 +86,7 @@ main() {
                 CXX="${CXX}" CXXFLAGS="${CXXFLAGS}" \
                 AR="${AR}" \
                 LD="${LD}" \
-                ./configure "$@"
+                ./configure --enable-maintainer-mode "$@"
 
         RUN "${MAKE}" \
                 CFLAGS="${CFLAGS} -Werror" \
