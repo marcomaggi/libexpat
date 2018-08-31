@@ -106,9 +106,9 @@ qa:
 
 #### documentation
 
+if WITH_DOCBOOK
 dist_man_MANS = doc/xmlwf.1
 
-if WITH_DOCBOOK
 .INTERMEDIATE: XMLWF.1
 
 XMLWF.1: doc/xmlwf.xml
