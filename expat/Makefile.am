@@ -107,7 +107,7 @@ qa:
 #### documentation
 
 if WITH_DOCBOOK
-dist_man_MANS = doc/xmlwf.1
+dist_man_MANS	= doc/xmlwf.1
 
 .INTERMEDIATE: XMLWF.1
 
@@ -116,19 +116,17 @@ XMLWF.1: doc/xmlwf.xml
 
 doc/xmlwf.1: XMLWF.1 doc/$(am__dirstamp)
 	mv $< $@
-else
-doc/xmlwf.1:
-	@echo 'ERROR: Configure with --with-docbook for "make dist".' 1>&2
-	@false
 endif
 
+# Clean the manual page file.
+#
 # https://www.gnu.org/software/automake/manual/automake.html#What-Gets-Cleaned
-.PHONY: clean-local
+ .PHONY: clean-local
 clean-local: clean-local-check
 
 .PHONY: clean-local-check
 clean-local-check:
-	$(RM) doc/xmlwf.1 doc/$(am__dirstamp)
+	$(RM) doc/xmlwf.1
 
 EXTRA_DIST += \
     doc/expat.png \
