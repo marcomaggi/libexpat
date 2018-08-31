@@ -113,6 +113,7 @@ before_script:
   - if test "$TRAVIS_OS_NAME" = osx ; then export LIBTOOLIZE=glibtoolize; else true; fi
   - if test "$TRAVIS_OS_NAME" = osx ; then brew update; else true; fi
   - if test "$TRAVIS_OS_NAME" = osx ; then brew install docbook; else true; fi
+  - if test "$TRAVIS_OS_NAME" = osx ; then brew install dos2unix; else true; fi
   - cd expat; sh ./autogen.sh;
 
 matrix:
@@ -196,7 +197,12 @@ matrix:
             - docbook2x
             - dos2unix
       compiler: clang
-      script: "cd expat; ./configure --enable-maintainer-mode; make all CFLAGS='-Wno-unknown-attributes'; make check CFLAGS='-Wno-unknown-attributes';"
+      script: |
+        cd expat;
+        ./configure --enable-maintainer-mode;
+        make all CFLAGS='-Wno-unknown-attributes';
+        make check CFLAGS='-Wno-unknown-attributes';
+        make run-xmltest;
 
 ## ------------------------------------------------------------------------
 ## Building under OS X.
@@ -260,7 +266,6 @@ matrix:
             - gcc-8
             - cmake
             - docbook2x
-            - dos2unix
       script: |
         cd expat;
         ./configure --enable-maintainer-mode CFLAGS='-O0 --coverage' CXXFLAGS='-O0 --coverage' LDFLAGS='--coverage';
