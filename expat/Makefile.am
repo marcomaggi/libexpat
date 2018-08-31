@@ -273,10 +273,11 @@ tests_runtestspp_SOURCES		= tests/runtestspp.cpp
 tests_doc_sample__print_outline_SOURCES	= tests/doc-sample--print-outline.c
 
 expat_tests_ldadd	= tests/libruntests.a lib/libexpat.la
+expat_doc_sample_ldadd	= lib/libexpat.la
 
 tests_runtests_LDADD			= $(expat_tests_ldadd)
 tests_runtestspp_LDADD			= $(expat_tests_ldadd)
-tests_doc_sample__print_outline_LDADD	= $(expat_tests_ldadd)
+tests_doc_sample__print_outline_LDADD	= $(expat_doc_sample_ldadd)
 
 ## --------------------------------------------------------------------
 
