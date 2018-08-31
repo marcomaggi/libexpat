@@ -1,6 +1,6 @@
 [![Travis CI Build Status](https://travis-ci.org/marcomaggi/libexpat.svg?branch=master)](https://travis-ci.org/marcomaggi/libexpat)
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/marcomaggi/libexpat?svg=true)](https://ci.appveyor.com/project/marcomaggi/libexpat)
-
+[![codecov](https://codecov.io/gh/marcomaggi/libexpat/branch/forked.marcomaggi-2018-08-20/graph/badge.svg)](https://codecov.io/gh/marcomaggi/libexpat)
 
 # Expat, Release 2.2.6
 
