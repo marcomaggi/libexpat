@@ -117,6 +117,10 @@ matrix:
   fast_finish: true
 
   include:
+
+## ------------------------------------------------------------------------
+## Building with GNU Autoconf.
+
     # Plain build under Ubuntu GNU+Linux "trusty", GCC 5.
     - os: linux
       dist: trusty
@@ -206,6 +210,9 @@ matrix:
       compiler: clang
       script: "cd expat; ./configure --enable-maintainer-mode; make all CFLAGS='-Wno-unknown-attributes'; make check CFLAGS='-Wno-unknown-attributes'; make run-xmltest;"
 
+## ------------------------------------------------------------------------
+## Building with CMake
+
     # Plain build under Ubuntu GNU+Linux "trusty", GCC 8 and CMake.
     - os: linux
       dist: trusty
@@ -222,23 +229,31 @@ matrix:
             - dos2unix
       script: "cd expat; cmake .; make all; make test;"
 
-    # Codecov support under Ubuntu GNU+Linux "trusty", GCC 7.
+## ------------------------------------------------------------------------
+## Code coverage.
+
+    # Codecov support under Ubuntu GNU+Linux "trusty", GCC 8, GNU
+    # Autoconf.
     - os: linux
       dist: trusty
-      compiler: gcc-7
+      compiler: gcc-8
       addons:
         apt:
           sources:
             - ubuntu-toolchain-r-test
           packages:
             - texinfo
-            - gcc-7
+            - gcc-8
             - cmake
             - docbook2x
             - dos2unix
-      script: "cd expat; ./configure --enable-maintainer-mode CFLAGS='-O0 --coverage'; make all; make check;"
+      script: |
+        cd expat;
+        ./configure --enable-maintainer-mode CFLAGS='-O0  --coverage' CXXFLAGS='-O0 --coverage';
+        make all;
+        make check;
       after_success:
-        bash <(curl -s https://codecov.io/bash) -xgcov-7
+        bash <(curl -s https://codecov.io/bash) -xgcov-8
 
 #page
 #### done
