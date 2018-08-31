@@ -1,6 +1,7 @@
-[![Travis CI Build Status](https://travis-ci.org/marcomaggi/libexpat.svg?branch=master)](https://travis-ci.org/marcomaggi/libexpat)
+[![Travis CI Build Status](https://travis-ci.org/marcomaggi/libexpat.svg?branch=forked.marcomaggi-2018-08-20)](https://travis-ci.org/marcomaggi/libexpat)
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/marcomaggi/libexpat?svg=true)](https://ci.appveyor.com/project/marcomaggi/libexpat)
 [![codecov](https://codecov.io/gh/marcomaggi/libexpat/branch/forked.marcomaggi-2018-08-20/graph/badge.svg)](https://codecov.io/gh/marcomaggi/libexpat)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/d963e6b220e449569483342127e57a8a)](https://www.codacy.com/app/marcomaggi/libexpat?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=marcomaggi/libexpat&amp;utm_campaign=Badge_Grade)
 
 # Expat, Release 2.2.6
 
