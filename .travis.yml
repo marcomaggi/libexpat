@@ -204,14 +204,23 @@ matrix:
     - os: osx
       osx_image: xcode7.3
       compiler: clang
-      script: "cd expat; ./configure --enable-maintainer-mode; make all CFLAGS='-Wno-unknown-attributes'; make check CFLAGS='-Wno-unknown-attributes';"
+      script: |
+        cd expat;
+        ./configure --enable-maintainer-mode --without-docbook;
+        make all CFLAGS='-Wno-unknown-attributes';
+        make check CFLAGS='-Wno-unknown-attributes';
 
     # Plain build under OS X, XCode 8.3, CLang automatically selected by
     # Travis CI.
     - os: osx
       osx_image: xcode8.3
       compiler: clang
-      script: "cd expat; ./configure --enable-maintainer-mode; make all CFLAGS='-Wno-unknown-attributes'; make check CFLAGS='-Wno-unknown-attributes'; make run-xmltest;"
+      script: |
+        cd expat;
+        ./configure --enable-maintainer-mode --without-docbook;
+        make all CFLAGS='-Wno-unknown-attributes';
+        make check CFLAGS='-Wno-unknown-attributes';
+        make run-xmltest;
 
 ## ------------------------------------------------------------------------
 ## Building with CMake
@@ -237,6 +246,9 @@ matrix:
 
     # Codecov support under Ubuntu GNU+Linux "trusty", GCC 8, GNU
     # Autoconf.
+    #
+    # We need  "-lgcov" in LDFLAGS  because, for  some reason it  is not
+    # added when linking the static library "libruntests.a".
     - os: linux
       dist: trusty
       compiler: gcc-8
@@ -252,7 +264,7 @@ matrix:
             - dos2unix
       script: |
         cd expat;
-        ./configure --enable-maintainer-mode CFLAGS='-O0  --coverage' CXXFLAGS='-O0 --coverage';
+        ./configure --enable-maintainer-mode CFLAGS='-O0 --coverage' CXXFLAGS='-O0 --coverage' LDFLAGS='-lgcov';
         make all;
         make check;
       after_success:
