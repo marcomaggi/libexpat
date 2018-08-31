@@ -246,9 +246,6 @@ matrix:
 
     # Codecov support under Ubuntu GNU+Linux "trusty", GCC 8, GNU
     # Autoconf.
-    #
-    # We need  "-lgcov" in LDFLAGS  because, for  some reason it  is not
-    # added when linking the static library "libruntests.a".
     - os: linux
       dist: trusty
       compiler: gcc-8
@@ -264,7 +261,7 @@ matrix:
             - dos2unix
       script: |
         cd expat;
-        ./configure --enable-maintainer-mode CFLAGS='-O0 --coverage' CXXFLAGS='-O0 --coverage' LDFLAGS='-lgcov';
+        ./configure --enable-maintainer-mode CFLAGS='-O0 --coverage' CXXFLAGS='-O0 --coverage' LDFLAGS='--coverage';
         make all;
         make check;
       after_success:
