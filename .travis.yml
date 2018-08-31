@@ -111,6 +111,7 @@ before_script:
   # On Linux the GNU Libtool  preparation script is called "libtoolize",
   # while on OS X it is called "glibtoolize".
   - if test "$TRAVIS_OS_NAME" = osx ; then export LIBTOOLIZE=glibtoolize; else true; fi
+  - if test "$TRAVIS_OS_NAME" = osx ; then brew install docbook; else true; fi
   - cd expat; sh ./autogen.sh;
 
 matrix:
@@ -206,7 +207,7 @@ matrix:
       compiler: clang
       script: |
         cd expat;
-        ./configure --enable-maintainer-mode --without-docbook;
+        ./configure --enable-maintainer-mode;
         make all CFLAGS='-Wno-unknown-attributes';
         make check CFLAGS='-Wno-unknown-attributes';
 
@@ -217,7 +218,7 @@ matrix:
       compiler: clang
       script: |
         cd expat;
-        ./configure --enable-maintainer-mode --without-docbook;
+        ./configure --enable-maintainer-mode;
         make all CFLAGS='-Wno-unknown-attributes';
         make check CFLAGS='-Wno-unknown-attributes';
         make run-xmltest;
