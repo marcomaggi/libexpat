@@ -196,6 +196,9 @@ matrix:
       compiler: clang
       script: "cd expat; ./configure --enable-maintainer-mode; make all CFLAGS='-Wno-unknown-attributes'; make check CFLAGS='-Wno-unknown-attributes';"
 
+## ------------------------------------------------------------------------
+## Building under OS X.
+
     # Plain build under OS X, XCode 7.3, CLang automatically selected by
     # Travis CI.
     - os: osx
