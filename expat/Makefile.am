@@ -38,7 +38,7 @@ AUTOMAKE_OPTIONS = \
     no-dist-gzip \
     subdir-objects
 
-ACLOCAL_AMFLAGS = -I m4
+ACLOCAL_AMFLAGS = -I meta/autotools
 LIBTOOLFLAGS = --verbose
 
 AM_CPPFLAGS = -I$(srcdir)/lib
@@ -88,13 +88,13 @@ EXTRA_DIST = \
     $(_EXTRA_DIST_CMAKE) \
     $(_EXTRA_DIST_WINDOWS) \
     \
-    conftools/expat.m4 \
-    conftools/get-version.sh \
-    conftools/PrintPath \
+    meta/autotools/expat.m4 \
+    meta/autotools/PrintPath \
+    meta/scripts/get-version.sh \
     \
     Changes \
     README.md \
-    test-driver-wrapper.sh
+    tests/test-driver-wrapper.sh
 
 .PHONY: qa
 qa:
@@ -246,7 +246,7 @@ examples_outline_LDADD = lib/libexpat.la
 
 #### tests
 
-AM_TESTS_ENVIRONMENT = export EXPAT_SRCDIR=$(srcdir); export EXPAT_BUILDDIR=$(builddir);
+AM_TESTS_ENVIRONMENT = export EXPAT_ABS_SRCDIR=$(abs_top_srcdir); export EXPAT_ABS_BUILDDIR=$(abs_top_builddir);
 noinst_LIBRARIES = tests/libruntests.a
 
 check_PROGRAMS = \
@@ -258,7 +258,7 @@ check_PROGRAMS = \
 TESTS = $(check_PROGRAMS)
 
 # To support MinGW and Non-MinGW at the same time:
-LOG_DRIVER = $(srcdir)/test-driver-wrapper.sh
+LOG_DRIVER = $(srcdir)/tests/test-driver-wrapper.sh
 
 tests_libruntests_a_SOURCES = \
     tests/chardata.c \
@@ -307,7 +307,7 @@ if WITH_XMLWF
 run-xmltest: xmlwf/xmlwf tests/xmlconf
 	export EXPAT_ABS_SRCDIR=$(abs_top_srcdir); \
 	export EXPAT_ABS_BUILDDIR=$(abs_top_builddir); \
-	$(srcdir)/tests/xmltest.sh "$(abs_top_builddir)/run.sh $(abs_top_builddir)/xmlwf/xmlwf@EXEEXT@" 2>&1 | \
+	$(srcdir)/tests/xmltest.sh "$(abs_top_builddir)/tests/run.sh $(abs_top_builddir)/xmlwf/xmlwf@EXEEXT@" 2>&1 | \
 	tee $(builddir)/tests/xmltest.log
 	dos2unix $(builddir)/tests/xmltest.log
 	diff -u $(srcdir)/tests/xmltest.log.expected $(builddir)/tests/xmltest.log
@@ -332,7 +332,7 @@ EXTRA_DIST += \
 
 .PHONY: run-benchmark
 run-benchmark:
-	$(builddir)/run.sh tests/benchmark/benchmark@EXEEXT@ -n $(top_srcdir)/../testdata/largefiles/recset.xml 65535 3
+	$(builddir)/tests/run.sh tests/benchmark/benchmark@EXEEXT@ -n $(top_srcdir)/../testdata/largefiles/recset.xml 65535 3
 
 
 ### end of file

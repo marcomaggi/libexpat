@@ -24,17 +24,16 @@ dnl NOTE: esyscmd() is a GNU M4 extension. Thus, we wrap it in an appropriate
 dnl test. I believe this test will work, but I don't have a place with non-
 dnl GNU M4 to test it right now.
 define([expat_version], ifdef([__gnu__],
-                              [esyscmd(conftools/get-version.sh lib/expat.h)],
+                              [esyscmd(meta/scripts/get-version.sh lib/expat.h)],
                               [2.2.x]))
 AC_INIT(expat, expat_version, expat-bugs@libexpat.org)
 undefine([expat_version])
 
 AC_CONFIG_SRCDIR(Makefile.in)
-AC_CONFIG_AUX_DIR(conftools)
+AC_CONFIG_MACRO_DIR([meta/autotools])
+AC_CONFIG_AUX_DIR([meta/autotools])
 AM_INIT_AUTOMAKE
 AM_MAINTAINER_MODE
-AC_CONFIG_MACRO_DIR([m4])
-
 
 dnl
 dnl Increment LIBREVISION if source code has changed at all
@@ -54,7 +53,7 @@ LIBAGE=6       # CMakeLists.txt!
 CPPFLAGS="${CPPFLAGS} -DHAVE_EXPAT_CONFIG_H"
 AC_CONFIG_HEADER(expat_config.h)
 
-sinclude(conftools/ac_c_bigendian_cross.m4)
+sinclude(meta/autotools/ac_c_bigendian_cross.m4)
 
 AC_LIBTOOL_WIN32_DLL
 AC_PROG_LIBTOOL
@@ -253,5 +252,5 @@ AS_IF([test "x${DOCBOOK_TO_MAN}" != x -a "x$with_docbook" != xno],
 AM_CONDITIONAL(WITH_DOCBOOK, [test "x${DOCBOOK_TO_MAN}" != x])
 
 AC_CONFIG_FILES([Makefile expat.pc])
-AC_CONFIG_FILES([run.sh], [chmod +x run.sh])
+AC_CONFIG_FILES([tests/run.sh], [chmod +x tests/run.sh])
 AC_OUTPUT

@@ -4,7 +4,7 @@
 #
 # This script will print Expat's version number on stdout. For example:
 #
-#   $ ./conftools/get-version.sh ./lib/expat.h
+#   $ ./meta/scripts/get-version.sh ./lib/expat.h
 #   1.95.3
 #   $
 #

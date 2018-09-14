@@ -9,7 +9,7 @@ set -e
 PS4='# '
 set -x
 
-version="$(./conftools/get-version.sh lib/expat.h)"
+version="$(./meta/scripts/get-version.sh lib/expat.h)"
 archive=expat-${version}.tar.bz2
 
 ./buildconf.sh
