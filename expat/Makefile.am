@@ -305,10 +305,12 @@ if WITH_XMLWF
 # Here  we redirect  stderr  to stdout  so  that a  "No  such file  or
 # directory" error message from "xmlwf" is appended to the log file.
 run-xmltest: xmlwf/xmlwf tests/xmlconf
-	export EXPAT_ABS_SRCDIR=$(abs_top_srcdir); \
-	export EXPAT_ABS_BUILDDIR=$(abs_top_builddir); \
-	$(srcdir)/tests/xmltest.sh "$(abs_top_builddir)/tests/run.sh $(abs_top_builddir)/xmlwf/xmlwf@EXEEXT@" 2>&1 | \
-	tee $(builddir)/tests/xmltest.log
+	$(srcdir)/tests/xmltest.sh			\
+		-S "$(abs_top_srcdir)"			\
+		-B "$(abs_top_builddir)"		\
+		-R "$(abs_top_builddir)/tests/run.sh"	\
+		-X "$(abs_top_builddir)/xmlwf/xmlwf@EXEEXT@" 2>&1 | \
+		tee $(builddir)/tests/xmltest.log
 	dos2unix $(builddir)/tests/xmltest.log
 	diff -u $(srcdir)/tests/xmltest.log.expected $(builddir)/tests/xmltest.log
 else
