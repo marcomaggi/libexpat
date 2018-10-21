@@ -66,7 +66,7 @@ int depth;
 
 
 static void XMLCALL
-start (void * data, char const * element, char const ** attribute)
+start (void * data __attribute__((__unused__)), char const * element, char const ** attribute)
 {
   for (int i = 0; i < depth; i++)
     printf("  ");
@@ -81,7 +81,7 @@ start (void * data, char const * element, char const ** attribute)
 }
 
 static void XMLCALL
-end (void * data, char const * el)
+end (void * data __attribute__((__unused__)), char const * el __attribute__((__unused__)))
 {
   depth--;
 }
