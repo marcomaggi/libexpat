@@ -25,7 +25,7 @@ dnl test. I believe this test will work, but I don't have a place with non-
 dnl GNU M4 to test it right now.
 m4_define([expat_version],
   m4_ifdef([__gnu__],
-           [esyscmd(conftools/get-version.sh lib/expat.h)],
+           [esyscmd(meta/scripts/get-version.sh lib/expat.h)],
            [2.2.x]))
 
 AC_INIT(expat, expat_version, expat-bugs@libexpat.org)
@@ -255,12 +255,6 @@ AS_IF([test "x${DOCBOOK_TO_MAN}" != x -a "x$with_docbook" != xno],
 AM_CONDITIONAL(WITH_DOCBOOK, [test "x${DOCBOOK_TO_MAN}" != x])
 
 AC_CONFIG_FILES([Makefile]
-  [expat.pc]
-  [doc/Makefile]
-  [examples/Makefile]
-  [lib/Makefile]
-  [tests/Makefile]
-  [tests/benchmark/Makefile]
-  [xmlwf/Makefile])
-AC_CONFIG_FILES([run.sh], [chmod +x run.sh])
+  [expat.pc])
+AC_CONFIG_FILES([tests/run.sh], [chmod +x tests/run.sh])
 AC_OUTPUT
