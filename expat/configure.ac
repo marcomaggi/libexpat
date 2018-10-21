@@ -125,6 +125,14 @@ AC_ARG_WITH([xmlwf],
   [with_xmlwf=yes])
 AM_CONDITIONAL([WITH_XMLWF], [test x${with_xmlwf} = xyes])
 
+AC_ARG_WITH([examples], [
+AS_HELP_STRING([--without-examples], [do not build examples @<:@default=included@:>@])], [], [with_examples=yes])
+AM_CONDITIONAL([WITH_EXAMPLES], [test x${with_examples} = xyes])
+
+AC_ARG_WITH([tests], [
+AS_HELP_STRING([--without-tests], [do not build tests @<:@default=included@:>@])], [], [with_tests=yes])
+AM_CONDITIONAL([WITH_TESTS], [test x${with_tests} = xyes])
+
 AM_CONDITIONAL([MINGW], [echo -- "${host}" | ${FGREP} mingw >/dev/null])
 AM_CONDITIONAL([UNICODE], [echo -- "${CPPFLAGS}${CFLAGS}" | ${FGREP} XML_UNICODE >/dev/null])
 
@@ -221,7 +229,7 @@ AC_ARG_ENABLE([xml-context],
   AS_HELP_STRING([--enable-xml-context @<:@COUNT@:>@],
     [Retain context around the current parse point;
      default is enabled and a size of 1024 bytes])
-  AS_HELP_STRING([--disable-xml-context],
+AS_HELP_STRING([--disable-xml-context],
     [Do not retain context around the current parse point]),
     [enable_xml_context=${enableval}])
 AS_IF([test "x${enable_xml_context}" != "xno"],
@@ -234,9 +242,9 @@ AS_IF([test "x${enable_xml_context}" != "xno"],
 AC_ARG_WITH([docbook],
   [AS_HELP_STRING([--with-docbook],
                   [enforce XML to man page compilation @<:@default=check@:>@])
-   AS_HELP_STRING([--without-docbook],
-                  [skip XML to man page compilation @<:@default=check@:>@])], [],
-                  [with_docbook=check])
+AS_HELP_STRING([--without-docbook],
+               [skip XML to man page compilation @<:@default=check@:>@])], [],
+               [with_docbook=check])
 
 AC_ARG_VAR([DOCBOOK_TO_MAN], [docbook2x-man command])
 AS_IF([test "x$with_docbook" != xno],
