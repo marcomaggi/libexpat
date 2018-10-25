@@ -71,7 +71,7 @@ AC_SUBST(LIBAGE)
 
 AC_LANG([C])
 AC_PROG_CC_C99
-AS_IF([test "$GCC" = yes],
+AS_VAR_IF(GCC,'yes',
   [AX_APPEND_COMPILE_FLAGS([-Wall -Wextra], [CFLAGS])
    dnl Be careful about adding the -fexceptions option; some versions of
    dnl GCC don't support it and it causes extra warnings that are only
@@ -84,7 +84,7 @@ AS_IF([test "$GCC" = yes],
 
 AC_LANG_PUSH([C++])
 AC_PROG_CXX
-AS_IF([test "$GCC" = yes],
+AS_VAR_IF(GCC,'yes',
   [AX_APPEND_COMPILE_FLAGS([-Wall -Wextra], [CXXFLAGS])
    dnl Be careful about adding the -fexceptions option; some versions of
    dnl GCC don't support it and it causes extra warnings that are only
@@ -93,7 +93,7 @@ AS_IF([test "$GCC" = yes],
    AX_APPEND_COMPILE_FLAGS([-fno-strict-aliasing], [CXXFLAGS])])
 AC_LANG_POP([C++])
 
-AS_IF([test "$GCC" = yes],
+AS_VAR_IF(GCC,'yes',
   [AX_APPEND_LINK_FLAGS([-fno-strict-aliasing],[LDFLAGS])])
 
 EXPATCFG_COMPILER_SUPPORTS_VISIBILITY([
@@ -141,11 +141,11 @@ AC_ARG_WITH([libbsd],
   [AS_HELP_STRING([--with-libbsd], [utilize libbsd (for arc4random_buf)])],
   [],
   [with_libbsd=no])
-AS_IF([test "x${with_libbsd}" != xno],
+AS_VAR_IF(with_libbsd,'no',
   [AC_CHECK_LIB([bsd],
      [arc4random_buf],
      [],
-     [AS_IF([test "x${with_libbsd}" = xyes],
+     [AS_VAR_IF(with_libbsd,'yes',
             [AC_MSG_ERROR([Enforced use of libbsd cannot be satisfied.])])])])
 AC_MSG_CHECKING([for arc4random_buf (BSD or libbsd)])
 AC_LINK_IFELSE([AC_LANG_SOURCE([
@@ -211,7 +211,7 @@ AC_CHECK_HEADERS(fcntl.h unistd.h)
 AC_TYPE_OFF_T
 AC_FUNC_MMAP
 
-AS_IF([test "$ac_cv_func_mmap_fixed_mapped" = "yes"],
+AS_VAR_IF(ac_cv_func_mmap_fixed_mapped,'yes',
   [AS_VAR_SET(FILEMAP,unixfilemap)],
   [AS_VAR_SET(FILEMAP,readfilemap)])
 AC_SUBST(FILEMAP)
@@ -232,7 +232,7 @@ AC_ARG_ENABLE([xml-context],
 AS_HELP_STRING([--disable-xml-context],
     [Do not retain context around the current parse point]),
     [enable_xml_context=${enableval}])
-AS_IF([test "x${enable_xml_context}" != "xno"],
+AS_VAR_IF(enable_xml_context,'no',
   [AS_IF([test "x${enable_xml_context}" = "xyes" \
             -o "x${enable_xml_context}" = "x"],
      [AS_VAR_SET(enable_xml_context,1024)])
@@ -247,7 +247,7 @@ AS_HELP_STRING([--without-docbook],
                [with_docbook=check])
 
 AC_ARG_VAR([DOCBOOK_TO_MAN], [docbook2x-man command])
-AS_IF([test "x$with_docbook" != xno],
+AS_VAR_IF(with_docbook,'no',
   [AC_CHECK_PROGS([DOCBOOK_TO_MAN], [docbook2x-man db2x_docbook2man docbook2man docbook-to-man])])
 AS_IF([test "x${DOCBOOK_TO_MAN}" = x -a "x$with_docbook" = xyes],
   [AC_MSG_ERROR([Required program 'docbook2x-man' not found.])])
