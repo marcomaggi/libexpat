@@ -203,6 +203,7 @@ EXTRA_DIST += \
 
 #### building xmlwf
 
+if WITH_XMLWF
 bin_PROGRAMS = xmlwf/xmlwf
 
 if UNICODE
@@ -243,6 +244,9 @@ EXTRA_DIST += \
     xmlwf/xmltchar.h \
     xmlwf/xmlurl.h \
     xmlwf/xmlwin32url.cxx
+
+# End of "if WITH_XMLWF".
+endif
 
 
 #### examples
