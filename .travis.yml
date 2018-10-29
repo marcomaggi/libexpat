@@ -137,7 +137,7 @@ matrix:
             - gcc-5
             - docbook2x
             - dos2unix
-      script: "cd expat; ./configure --enable-maintainer-mode; cat config.log; make all; make check; make run-xmltest;"
+      script: "cd expat; ./configure --enable-maintainer-mode; make all; make check; make run-xmltest;"
 
     # Plain build under Ubuntu GNU+Linux "trusty", GCC 6.
     - os: linux
