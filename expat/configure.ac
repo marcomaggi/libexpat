@@ -72,7 +72,7 @@ AC_SUBST(LIBAGE)
 
 AC_LANG([C])
 AC_PROG_CC_C99
-AS_VAR_IF(GCC,'yes',
+AS_VAR_IF([GCC],['yes'],
   [AX_APPEND_COMPILE_FLAGS([-Wall -Wextra], [CFLAGS])
    dnl Be careful about adding the -fexceptions option; some versions of
    dnl GCC don't support it and it causes extra warnings that are only
@@ -85,7 +85,7 @@ AS_VAR_IF(GCC,'yes',
 
 AC_LANG_PUSH([C++])
 AC_PROG_CXX
-AS_VAR_IF(GCC,'yes',
+AS_VAR_IF([GCC],['yes'],
   [AX_APPEND_COMPILE_FLAGS([-Wall -Wextra], [CXXFLAGS])
    dnl Be careful about adding the -fexceptions option; some versions of
    dnl GCC don't support it and it causes extra warnings that are only
@@ -94,7 +94,7 @@ AS_VAR_IF(GCC,'yes',
    AX_APPEND_COMPILE_FLAGS([-fno-strict-aliasing], [CXXFLAGS])])
 AC_LANG_POP([C++])
 
-AS_VAR_IF(GCC,'yes',
+AS_VAR_IF([GCC],['yes'],
   [AX_APPEND_LINK_FLAGS([-fno-strict-aliasing],[LDFLAGS])])
 
 EXPATCFG_COMPILER_SUPPORTS_VISIBILITY([
@@ -148,75 +148,8 @@ EXPATCFG_ENABLE_UNICODE_SUPPORT
 AM_CONDITIONAL([UNICODE],
   [test "x${expatcfg_cv_xml_unicode}" = xyes -o "x${expatcfg_cv_xml_unicode_wchar}" = xyes])
 
-
-AC_ARG_WITH([libbsd],
-  [AS_HELP_STRING([--with-libbsd], [utilize libbsd (for arc4random_buf)])],
-  [],
-  [with_libbsd=no])
-AS_VAR_IF(with_libbsd,'no',
-  [AC_CHECK_LIB([bsd],
-     [arc4random_buf],
-     [],
-     [AS_VAR_IF(with_libbsd,'yes',
-            [AC_MSG_ERROR([Enforced use of libbsd cannot be satisfied.])])])])
-AC_MSG_CHECKING([for arc4random_buf (BSD or libbsd)])
-AC_LINK_IFELSE([AC_LANG_SOURCE([
-  #include <stdlib.h>  /* for arc4random_buf on BSD, for NULL */
-  #if defined(HAVE_LIBBSD)
-  # include <bsd/stdlib.h>
-  #endif
-  int main() {
-    arc4random_buf(NULL, 0U);
-    return 0;
-  }
-])],
-  [AC_DEFINE([HAVE_ARC4RANDOM_BUF], [1], [Define to 1 if you have the `arc4random_buf' function.])
-   AC_MSG_RESULT([yes])],
-  [AC_MSG_RESULT([no])
-
-   AC_MSG_CHECKING([for arc4random (BSD, macOS or libbsd)])
-   AC_LINK_IFELSE([AC_LANG_SOURCE([
-      #if defined(HAVE_LIBBSD)
-      # include <bsd/stdlib.h>
-      #else
-      # include <stdlib.h>
-      #endif
-      int main() {
-          arc4random();
-          return 0;
-      }
-     ])],
-     [AC_DEFINE([HAVE_ARC4RANDOM], [1], [Define to 1 if you have the `arc4random' function.])
-      AC_MSG_RESULT([yes])],
-     [AC_MSG_RESULT([no])])])
-
-
-AC_MSG_CHECKING([for getrandom (Linux 3.17+, glibc 2.25+)])
-AC_LINK_IFELSE([AC_LANG_SOURCE([
-  #include <stdlib.h>  /* for NULL */
-  #include <sys/random.h>
-  int main() {
-    return getrandom(NULL, 0U, 0U);
-  }
-  ])],
-  [AC_DEFINE([HAVE_GETRANDOM], [1], [Define to 1 if you have the `getrandom' function.])
-   AC_MSG_RESULT([yes])],
-  [AC_MSG_RESULT([no])
-
-   AC_MSG_CHECKING([for syscall SYS_getrandom (Linux 3.17+)])
-   AC_LINK_IFELSE([AC_LANG_SOURCE([
-      #include <stdlib.h>  /* for NULL */
-      #include <unistd.h>  /* for syscall */
-      #include <sys/syscall.h>  /* for SYS_getrandom */
-      int main() {
-        syscall(SYS_getrandom, NULL, 0, 0);
-        return 0;
-      }
-   ])],
-   [AC_DEFINE([HAVE_SYSCALL_GETRANDOM], [1], [Define to 1 if you have `syscall' and `SYS_getrandom'.])
-    AC_MSG_RESULT([yes])],
-   [AC_MSG_RESULT([no])])])
-
+EXPATCFG_SUPPORT_ARC4RANDOM_THROUGH_LIBBSD
+EXPATCFG_SUPPORT_GETRANDOM
 
 dnl Only needed for xmlwf:
 AC_CHECK_HEADERS(fcntl.h unistd.h)

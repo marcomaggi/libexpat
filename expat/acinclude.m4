@@ -9,5 +9,7 @@ m4_include(meta/autoconf/ax-append-compile-flags.m4)
 m4_include(meta/autoconf/ax-append-link-flags.m4)
 m4_include(meta/autoconf/expatcfg-compiler-supports-visibility.m4)
 m4_include(meta/autoconf/expatcfg-enable-unicode-support.m4)
+m4_include(meta/autoconf/expatcfg-support-arc4random-through-libbsd.m4)
+m4_include(meta/autoconf/expatcfg-support-getrandom.m4)
 
 ### end of file
