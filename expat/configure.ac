@@ -134,7 +134,6 @@ AC_ARG_WITH([tests], [
 AS_HELP_STRING([--without-tests], [do not build tests @<:@default=included@:>@])], [], [with_tests=yes])
 AM_CONDITIONAL([WITH_TESTS], [test x${with_tests} = xyes])
 
-
 AS_VAR_SET([EXPATCFG_ON_MINGW],[no])
 AS_CASE("$host_os",
   [mingw*],
@@ -142,7 +141,12 @@ AS_CASE("$host_os",
    AC_MSG_NOTICE([detected OS: MINGW])])
 AM_CONDITIONAL([MINGW], [test x$EXPATCFG_ON_MINGW = xyes])
 
-AM_CONDITIONAL([UNICODE], [echo -- "${CPPFLAGS}${CFLAGS}" | ${FGREP} XML_UNICODE >/dev/null])
+dnl Check  if the caller  requested Unicode support.  Remember  that the
+dnl  AM_CONDITIONAL must  be in  "configure.ac",  it cannot  go into  an
+dnl external macro file.
+EXPATCFG_ENABLE_UNICODE_SUPPORT
+AM_CONDITIONAL([UNICODE],
+  [test "x${expatcfg_cv_xml_unicode}" = xyes -o "x${expatcfg_cv_xml_unicode_wchar}" = xyes])
 
 
 AC_ARG_WITH([libbsd],

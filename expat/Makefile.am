@@ -135,6 +135,16 @@ EXTRA_DIST += \
     doc/valid-xhtml10.png \
     doc/xmlwf.xml
 
+doc_DATA = \
+    AUTHORS \
+    Changes
+
+install-data-hook:
+	cd "$(DESTDIR)$(docdir)" && $(am__mv) Changes changelog
+
+uninstall-local:
+	$(RM) "$(DESTDIR)$(docdir)/changelog"
+
 ## --------------------------------------------------------------------
 
 AM_MAKEINFOFLAGS	= --no-split
@@ -150,27 +160,25 @@ include_HEADERS = \
     lib/expat.h \
     lib/expat_external.h
 
-lib_LTLIBRARIES = lib/libexpat.la
-
-lib_libexpat_la_LDFLAGS = \
+EXPAT_LIB_LDFLAGS = \
     -no-undefined \
     -version-info @LIBCURRENT@:@LIBREVISION@:@LIBAGE@
 
-lib_libexpat_la_SOURCES = \
+EXPAT_LIB_SOURCES = \
     lib/loadlibrary.c \
     lib/xmlparse.c \
     lib/xmltok.c \
     lib/xmlrole.c
 
-doc_DATA = \
-    AUTHORS \
-    Changes
-
-install-data-hook:
-	cd "$(DESTDIR)$(docdir)" && $(am__mv) Changes changelog
-
-uninstall-local:
-	$(RM) "$(DESTDIR)$(docdir)/changelog"
+if UNICODE
+lib_LTLIBRARIES = lib/libexpatw.la
+lib_libexpatw_la_LDFLAGS = $(EXPAT_LIB_LDFLAGS)
+lib_libexpatw_la_SOURCES = $(EXPAT_LIB_SOURCES)
+else
+lib_LTLIBRARIES = lib/libexpat.la
+lib_libexpat_la_LDFLAGS = $(EXPAT_LIB_LDFLAGS)
+lib_libexpat_la_SOURCES = $(EXPAT_LIB_SOURCES)
+endif
 
 EXTRA_DIST += \
     lib/ascii.h \
@@ -197,7 +205,11 @@ EXTRA_DIST += \
 
 bin_PROGRAMS = xmlwf/xmlwf
 
+if UNICODE
+xmlwf_xmlwf_LDADD = lib/libexpatw.la
+else
 xmlwf_xmlwf_LDADD = lib/libexpat.la
+endif
 xmlwf_xmlwf_SOURCES = \
     xmlwf/xmlwf.c \
     xmlwf/xmlfile.c \
@@ -238,10 +250,18 @@ EXTRA_DIST += \
 noinst_PROGRAMS = examples/elements examples/outline
 
 examples_elements_SOURCES = examples/elements.c
+if UNICODE
+examples_elements_LDADD = lib/libexpatw.la
+else
 examples_elements_LDADD = lib/libexpat.la
+endif
 
 examples_outline_SOURCES = examples/outline.c
+if UNICODE
+examples_outline_LDADD = lib/libexpatw.la
+else
 examples_outline_LDADD = lib/libexpat.la
+endif
 
 
 #### tests
@@ -270,8 +290,13 @@ tests_runtests_SOURCES			= tests/runtests.c
 tests_runtestspp_SOURCES		= tests/runtestspp.cpp
 tests_doc_sample__print_outline_SOURCES	= tests/doc-sample--print-outline.c
 
+if UNICODE
+expat_tests_ldadd	= tests/libruntests.a lib/libexpatw.la
+expat_doc_sample_ldadd	= lib/libexpatw.la
+else
 expat_tests_ldadd	= tests/libruntests.a lib/libexpat.la
 expat_doc_sample_ldadd	= lib/libexpat.la
+endif
 
 tests_runtests_LDADD			= $(expat_tests_ldadd)
 tests_runtestspp_LDADD			= $(expat_tests_ldadd)
@@ -327,7 +352,11 @@ noinst_PROGRAMS += tests/benchmark/benchmark
 
 tests_benchmark_benchmark_SOURCES = tests/benchmark/benchmark.c
 
+if UNICODE
+tests_benchmark_benchmark_LDADD = lib/libexpatw.la
+else
 tests_benchmark_benchmark_LDADD = lib/libexpat.la
+endif
 
 EXTRA_DIST += \
     tests/benchmark/README.txt
@@ -335,6 +364,5 @@ EXTRA_DIST += \
 .PHONY: run-benchmark
 run-benchmark:
 	$(builddir)/tests/run.sh tests/benchmark/benchmark@EXEEXT@ -n $(top_srcdir)/../testdata/largefiles/recset.xml 65535 3
-
 
 ### end of file
