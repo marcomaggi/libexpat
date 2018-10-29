@@ -110,8 +110,8 @@ _run() {
         cd "${build_dir}"
 
         _configure \
-                CFLAGS="${BASE_FLAGS}" \
-                CXXFLAGS="${BASE_FLAGS}"
+                CFLAGS="${CFLAGS}" \
+                CXXFLAGS="${CXXFLAGS}"
 
         (
             set -x
@@ -227,7 +227,7 @@ _main() {
 
     echo 'Rendering HTML report...'
     _render_html_report "${coverage_dir}"
-    echo "--> ${coverage_dir}/index.html"
+    printf '--> %s/index.html\n' "${coverage_dir}"
 
     echo
     _show_summary "${coverage_dir}"
