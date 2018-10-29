@@ -32,17 +32,17 @@ AC_DEFUN([EXPATCFG_SUPPORT_GETRANDOM],[
      # Try  to  link  with  "getrandom",  if  successful  we  are  done.
      # Otherwise try to link with "SYS_getrandom".
      AC_LINK_IFELSE([AC_LANG_SOURCE([
-         #include <stdlib.h>  /* for NULL */
-         #include <sys/random.h>
+#include <stdlib.h>  /* for NULL */
+#include <sys/random.h>
          int main() {
            return getrandom(NULL, 0U, 0U);
          }
        ])],
        [AS_VAR_SET([expatcfg_cv_support_getrandom],[getrandom])],
        [AC_LINK_IFELSE([AC_LANG_SOURCE([
-           #include <stdlib.h>  /* for NULL */
-           #include <unistd.h>  /* for syscall */
-           #include <sys/syscall.h>  /* for SYS_getrandom */
+#include <stdlib.h>  /* for NULL */
+#include <unistd.h>  /* for syscall */
+#include <sys/syscall.h>  /* for SYS_getrandom */
            int main() {
              syscall(SYS_getrandom, NULL, 0, 0);
              return 0;
