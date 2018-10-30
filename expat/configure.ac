@@ -76,21 +76,27 @@ AC_SUBST(LIBAGE)
 
 AC_LANG([C])
 AC_PROG_CC_C99
+dnl When  testing a warning flag  we add "-Werror" to  actually cause an
+dnl  error exit  in case  the warning  flag is  not supported.   This is
+dnl needed for clang.
 AS_IF([test "$GCC" = yes],
-  [AX_APPEND_COMPILE_FLAGS([-Wall -Wextra], [EXPAT_CFLAGS])
+  [AX_APPEND_COMPILE_FLAGS([-Wall -Wextra -pedantic], [EXPAT_CFLAGS], [-Werror])
    dnl Be careful about adding the -fexceptions option; some versions of
    dnl GCC don't support it and it causes extra warnings that are only
    dnl distracting; avoid.
-   AX_APPEND_COMPILE_FLAGS([-fexceptions], [EXPAT_CFLAGS])
-   AX_APPEND_COMPILE_FLAGS([-fno-strict-aliasing -Wmissing-prototypes -Wstrict-prototypes], [EXPAT_CFLAGS])
-   AX_APPEND_COMPILE_FLAGS([-pedantic -Wduplicated-cond -Wduplicated-branches -Wlogical-op], [EXPAT_CFLAGS])
-   AX_APPEND_COMPILE_FLAGS([-Wrestrict -Wnull-dereference -Wjump-misses-init -Wdouble-promotion], [EXPAT_CFLAGS])
-   AX_APPEND_COMPILE_FLAGS([-Wshadow -Wformat=2 -Wmisleading-indentation], [EXPAT_CFLAGS])])
+   AX_APPEND_COMPILE_FLAGS([-fexceptions -fno-strict-aliasing], [EXPAT_CFLAGS])
+   AX_APPEND_COMPILE_FLAGS([-Wmissing-prototypes -Wstrict-prototypes], [EXPAT_CFLAGS], [-Werror])
+   AX_APPEND_COMPILE_FLAGS([-Wduplicated-cond -Wduplicated-branches -Wlogical-op], [EXPAT_CFLAGS], [-Werror])
+   AX_APPEND_COMPILE_FLAGS([-Wrestrict -Wnull-dereference -Wjump-misses-init -Wdouble-promotion], [EXPAT_CFLAGS], [-Werror])
+   AX_APPEND_COMPILE_FLAGS([-Wshadow -Wformat=2 -Wmisleading-indentation], [EXPAT_CFLAGS], [-Werror])])
 
 AC_LANG_PUSH([C++])
 AC_PROG_CXX
+dnl When  testing a warning flag  we add "-Werror" to  actually cause an
+dnl  error exit  in case  the warning  flag is  not supported.   This is
+dnl needed for clang.
 AS_IF([test "$GCC" = yes],
-  [AX_APPEND_COMPILE_FLAGS([-Wall -Wextra], [EXPAT_CXXFLAGS])
+  [AX_APPEND_COMPILE_FLAGS([-Wall -Wextra], [EXPAT_CXXFLAGS], [-Werror])
    dnl Be careful about adding the -fexceptions option; some versions of
    dnl GCC don't support it and it causes extra warnings that are only
    dnl distracting; avoid.
