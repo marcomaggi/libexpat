@@ -29,6 +29,7 @@
 # USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 AM_CPPFLAGS = -I$(srcdir)/../lib
+AM_CFLAGS   = $(EXPAT_CFLAGS)
 
 noinst_PROGRAMS = elements outline
 

@@ -51,7 +51,15 @@ LIBCURRENT=7   # sync
 LIBREVISION=8  # with
 LIBAGE=6       # CMakeLists.txt!
 
-AX_APPEND_FLAG([-DHAVE_EXPAT_CONFIG_H], [CPPFLAGS])
+dnl The "configure" script must put the package specific C and C++ flags
+dnl  into  these  variables,  rather than  clobbering  CPPFLAS,  CFLAGS,
+dnl CXXFLAGS and LDFLAGS.
+AS_VAR_SET([EXPAT_CPPFLAGS])
+AS_VAR_SET([EXPAT_CFLAGS])
+AS_VAR_SET([EXPAT_CXXFLAGS])
+AS_VAR_SET([EXPAT_LDFLAGS])
+
+AX_APPEND_FLAG([-DHAVE_EXPAT_CONFIG_H], [EXPAT_CPPFLAGS])
 AC_CONFIG_HEADER([expat_config.h])
 
 AM_PROG_AR
@@ -69,33 +77,33 @@ AC_SUBST(LIBAGE)
 AC_LANG([C])
 AC_PROG_CC_C99
 AS_IF([test "$GCC" = yes],
-  [AX_APPEND_COMPILE_FLAGS([-Wall -Wextra], [CFLAGS])
+  [AX_APPEND_COMPILE_FLAGS([-Wall -Wextra], [EXPAT_CFLAGS])
    dnl Be careful about adding the -fexceptions option; some versions of
    dnl GCC don't support it and it causes extra warnings that are only
    dnl distracting; avoid.
-   AX_APPEND_COMPILE_FLAGS([-fexceptions], [CFLAGS])
-   AX_APPEND_COMPILE_FLAGS([-fno-strict-aliasing -Wmissing-prototypes -Wstrict-prototypes], [CFLAGS])
-   AX_APPEND_COMPILE_FLAGS([-pedantic -Wduplicated-cond -Wduplicated-branches -Wlogical-op], [CFLAGS])
-   AX_APPEND_COMPILE_FLAGS([-Wrestrict -Wnull-dereference -Wjump-misses-init -Wdouble-promotion], [CFLAGS])
-   AX_APPEND_COMPILE_FLAGS([-Wshadow -Wformat=2 -Wmisleading-indentation], [CFLAGS])])
+   AX_APPEND_COMPILE_FLAGS([-fexceptions], [EXPAT_CFLAGS])
+   AX_APPEND_COMPILE_FLAGS([-fno-strict-aliasing -Wmissing-prototypes -Wstrict-prototypes], [EXPAT_CFLAGS])
+   AX_APPEND_COMPILE_FLAGS([-pedantic -Wduplicated-cond -Wduplicated-branches -Wlogical-op], [EXPAT_CFLAGS])
+   AX_APPEND_COMPILE_FLAGS([-Wrestrict -Wnull-dereference -Wjump-misses-init -Wdouble-promotion], [EXPAT_CFLAGS])
+   AX_APPEND_COMPILE_FLAGS([-Wshadow -Wformat=2 -Wmisleading-indentation], [EXPAT_CFLAGS])])
 
 AC_LANG_PUSH([C++])
 AC_PROG_CXX
 AS_IF([test "$GCC" = yes],
-  [AX_APPEND_COMPILE_FLAGS([-Wall -Wextra], [CXXFLAGS])
+  [AX_APPEND_COMPILE_FLAGS([-Wall -Wextra], [EXPAT_CXXFLAGS])
    dnl Be careful about adding the -fexceptions option; some versions of
    dnl GCC don't support it and it causes extra warnings that are only
    dnl distracting; avoid.
-   AX_APPEND_COMPILE_FLAGS([-fexceptions], [CXXFLAGS])
-   AX_APPEND_COMPILE_FLAGS([-fno-strict-aliasing], [CXXFLAGS])])
+   AX_APPEND_COMPILE_FLAGS([-fexceptions], [EXPAT_CXXFLAGS])
+   AX_APPEND_COMPILE_FLAGS([-fno-strict-aliasing], [EXPAT_CXXFLAGS])])
 AC_LANG_POP([C++])
 
 AS_IF([test "$GCC" = yes],
-  [AX_APPEND_LINK_FLAGS([-fno-strict-aliasing],[LDFLAGS])])
+  [AX_APPEND_LINK_FLAGS([-fno-strict-aliasing],[EXPAT_LDFLAGS])])
 
 EXPATCFG_COMPILER_SUPPORTS_VISIBILITY([
-  AX_APPEND_FLAG([-fvisibility=hidden],       [CFLAGS])
-  AX_APPEND_FLAG([-DXML_ENABLE_VISIBILITY=1], [CFLAGS])])
+  AX_APPEND_FLAG([-fvisibility=hidden],       [EXPAT_CFLAGS])
+  AX_APPEND_FLAG([-DXML_ENABLE_VISIBILITY=1], [EXPAT_CFLAGS])])
 
 dnl Checks for header files.
 AC_HEADER_STDC
@@ -258,6 +266,11 @@ AS_IF([test "x${DOCBOOK_TO_MAN}" != x -a "x$with_docbook" != xno],
   page for xmlwf.])])])
 
 AM_CONDITIONAL(WITH_DOCBOOK, [test "x${DOCBOOK_TO_MAN}" != x])
+
+AC_SUBST([EXPAT_CPPFLAGS])
+AC_SUBST([EXPAT_CFLAGS])
+AC_SUBST([EXPAT_CXXFLAGS])
+AC_SUBST([EXPAT_LDFLAGS])
 
 AC_CONFIG_FILES([Makefile]
   [expat.pc]

@@ -30,7 +30,10 @@
 
 SUBDIRS = . benchmark
 
-AM_CPPFLAGS = -I$(srcdir)/../lib
+AM_CPPFLAGS = $(EXPAT_CPPFLAGS) -I$(srcdir)/../lib
+AM_CFLAGS   = $(EXPAT_CFLAGS)
+AM_CXXFLAGS = $(EXPAT_CXXFLAGS)
+AM_LDFLAGS  = $(EXPAT_LDFLAGS)
 
 noinst_LIBRARIES = libruntests.a
 

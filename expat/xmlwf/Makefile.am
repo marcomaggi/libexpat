@@ -28,6 +28,11 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
 # USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+AM_CPPFLAGS = $(EXPAT_CPPFLAGS)
+AM_CFLAGS   = $(EXPAT_CFLAGS)
+AM_CXXFLAGS = $(EXPAT_CXXFLAGS)
+AM_LDFLAGS  = $(EXPAT_LDFLAGS)
+
 bin_PROGRAMS = xmlwf
 
 xmlwf_LDADD = ../lib/libexpat.la
@@ -37,12 +42,12 @@ xmlwf_SOURCES = \
     codepage.c \
     @FILEMAP@.c
 
-xmlwf_CPPFLAGS = -I$(srcdir)/../lib
+xmlwf_CPPFLAGS = $(AM_CPPFLAGS) -I$(srcdir)/../lib
 
 if MINGW
 if UNICODE
 xmlwf_CPPFLAGS += -mwindows
-xmlwf_LDFLAGS = -municode
+xmlwf_LDFLAGS = $(AM_LDFLAGS) -municode
 endif
 endif
 
